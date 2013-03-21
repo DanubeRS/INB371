@@ -22,3 +22,5 @@ int main()
     cout << "|     ***INB371_S1_W3_Q1***    |" << endl;
     cout << "================================" << endl << endl;
 }
+
+cout << "Testing GIT branching using GIT-COLA" << endl;
