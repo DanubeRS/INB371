@@ -3,6 +3,13 @@
 
     A simple program that calculates the prime numbers within a range, returning
     both the values themselves, and the cumulative number of them.
+
+    v0.1 Primary
+    Changelog++
+
+    0.1
+    ===
+    -Initial Creation
 */
 
 
@@ -21,6 +28,9 @@ int main()
     cout << "|    (c)  Daniel Park 2013     |" << endl;
     cout << "|     ***INB371_S1_W3_Q1***    |" << endl;
     cout << "================================" << endl << endl;
+
+    
+    
 }
 
-cout << "Testing GIT branching using GIT-COLA" << endl;
+    
