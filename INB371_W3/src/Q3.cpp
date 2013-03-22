@@ -21,9 +21,10 @@
 using namespace std;
 
 //Function Prototypes
-int* findPrimes(bool primes, int length);   //Find all primes within a range
-void listPrimes(bool primes, int length);    //List all primes directly via std::cout
-int  countPrimes(bool primes, int length);
+void findPrimes(bool *p, int l);   //Find all primes within a range
+void listPrimes(bool *p, int l);    //List all primes directly via std::cout
+int  countPrimes(bool *p, int l);
+void fillTrue(bool *array, int l);
 
 int main()
 {
@@ -40,23 +41,77 @@ int main()
     int range;      //Range (within values holding int) to search for primes.
 
     cout << "Please enter an upper limit of which you wish to find primes (Starting from zero)" << endl;
-    cin >>  int;
+    cin >> range;
 
     //Create an array of which the upper bound coincides with the inputted int
-    bool primes[range+1];
-    fill(primes[0], primes[range + 1], true); //Fill array using <algorithm>std::fill
+    bool primes[range + 1];
+    fillTrue(primes, range); //Fill array using <algorithm>std::fill
+    primes[1] = false; primes[0] = false;   //We already know that 0 and 1 are not primes
 
     findPrimes(primes, range + 1);   //Pass to function BY REFERENCE
     listPrimes(primes, range + 1);
-    countPrimes(primes, range + 1);
+    cout << "There are " <<  countPrimes(primes, range + 1) << " primes from 0 to " << range << endl;
     
 }
 
-int* findPrimes(bool primes, int length){
+void findPrimes(bool *p, int l){
 
     //Using Eratosthenes method of prime elimination, use an iterative process to find primes
-    
+
+    //Iterate across all values
+    for (int i = 0; i < l + 1; i++){
+        
+        //Only perform any operations on the values not already declared false
+        if (p[i]){
+
+            //DEBUG
+            //cout << "Calculating " << i << endl;
+
+            //set all prime multiples of i(indices herin known as n) to false
+            for (int n = 2*i; n <= l; n += i){
+                p[n] = false;
+                
+                //DEBUG
+                //cout << n << " is not a prime" << endl;
+            }
+        }
+    }
 
 }
 
+void fillTrue(bool *array, int l){
+
+    //DEBUG
+    //cout << "Filling with true" << endl;
+
+    for (int i = 0; i <= l; i++){
+        array[i] = true;
+    }
+    //DEBUG
+    //out << "True filling finished " << endl;
+}
+void listPrimes(bool *p, int l){
+
+    //Status message
+    cout << "Primes are: ";
+    for (int i = 0; i <= l; i++){
+        if (p[i]){
+            cout << i << " ";
+        }
+    }
+    cout << endl << "Prime listing finished" << endl;
+
+}
+int  countPrimes(bool *p, int l){
     
+    //Status message
+    cout << "Counting Primes: ";
+    int sum = 0;
+    for (int i = 0; i <= l; i++){
+        if (p[i]){
+            sum++;
+        }
+    }
+    cout << endl << "Prime Counting finished" << endl;
+    return sum;
+}
