@@ -1,5 +1,5 @@
 /*
-    Heads and Tails (c) Daniel Park 2013
+    CapitalCracker (c) Daniel Park 2013
 
     A program which uses the interfacing features of c++ to generate a heads-or-tails
     probability simulation.
@@ -27,10 +27,10 @@ int main()
 
     //Inform the user of the program:
     cout << "================================" << endl;
-    cout << "|        Heads or Tails        |" << endl;
+    cout << "|        CapitalCracker        |" << endl;
     cout << "================================" << endl;
     cout << "|    (c)  Daniel Park 2013     |" << endl;
-    cout << "|     ***INB371_S1_W3_Q5***    |" << endl;
+    cout << "|     ***INB371_S1_W4_Q3***    |" << endl;
     cout << "================================" << endl << endl;
 
     // testing - do not alter (Provided by Malcom Corney)
