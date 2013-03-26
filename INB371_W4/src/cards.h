@@ -58,3 +58,13 @@ enum RANK {ACE = 0, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, 
 
 
 
+		 /* Function: GetCardName
+ * Usage: Shuffle(int iter, Card[] deck)
+ * ------------------------------------
+		Gets a cards name (2 character literal)
+ */
+		string GetCardName(Card c);
+
+
+
+
