@@ -10,6 +10,7 @@
 */
 #include <cstdlib>
 #include <algorithm>	//Used for element swapping
+#include <string>		//Used for appending a string
 #include "cards.h"
 #include "supplied/random.h"
 
@@ -124,4 +125,15 @@
 
 			}
 
+		}
+				 /* Function: GetCardName
+ * Usage: Shuffle(int iter, Card[] deck)
+ * ------------------------------------
+		Gets a cards name (2 character literal)
+ */
+		string GetCardName(Card c){
+			string name = "";
+			name.append(GetCardRankLiteral(c));
+			name.append(GetCardSuitLiteral(c));
+			return name;
 		}
