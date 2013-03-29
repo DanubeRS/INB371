@@ -8,6 +8,15 @@
 
 */
 
+//Declarations
+#include <cstdlib>
+#include <ctime>
+#include <cstdio>
+#include <iostream>
+//User includes
+#include "random.h"
+//Good ol' std namespace
+using namespace std;
 //Program Entry Point
 int main()
 {
@@ -19,6 +28,11 @@ int main()
     cout << "|    (c)  Daniel Park 2013     |" << endl;
     cout << "|     ***INB371_S1_W5_Q3***    |" << endl;
     cout << "================================" << endl << endl;
+
+    Random randomClass = Random();
+
+    int value = randomClass.RandomInteger(0,100);
+    cout << "Class random value is: " << value << "." << endl;
 
     return 0;
 }
