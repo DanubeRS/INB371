@@ -28,6 +28,7 @@ CardVector::CardVector()
 
     //Default Constructor
     m_elements = new Card[DEFAULT_INITIAL_CAPACITY];
+    cout << "Creating CardVector " << endl;
     count = 0;
     capacity = DEFAULT_INITIAL_CAPACITY;
 }
@@ -118,6 +119,8 @@ void CardVector::add(Card c)
         increaseCapacity(DEFAULT_GROWTH_SIZE);
     }
     m_elements[count] = c;
+    cout << "Added " << m_elements[count].getCardName() << endl;
+    cout << "Count increased from " << count << " to " << count + 1;
     count++;
 
 }
@@ -156,8 +159,11 @@ void CardVector::increaseCapacity(int n)
     //Place all cards in the new collection
     for (unsigned int i = 0; i < count; i++)
     {
-        cout << "assigned " << m_elements[i].getCardName() << endl;
+        cout << "assigned [" << i << "] "<< m_elements[i].getCardName();
+        cout << " to " << newElements[i].getCardName();
         newElements[i] = m_elements[i];
+        cout << " ==> " << newElements[i].getCardName() << endl;;
+
     }
 
 
