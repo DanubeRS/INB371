@@ -1,6 +1,6 @@
 /*  ===HEADER FILE===
 
-    Point (c) Daniel Park 2013
+    Card (c) Daniel Park 2013
 
     A program which uses the OOP features of c++ to define a card object
 
@@ -23,6 +23,7 @@ enum RANK {ACE = 0, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, 
 
 //FUNCTION DECLARATION
 class Card{
+
 public:
 	/*
 		Default construtor. Not to be used in most cases
@@ -42,12 +43,12 @@ public:
 	/*
 		Returns the rank of a card. (see enum RANK)
 	 */
-	RANK getRank();
+	string getRank();
 
 	/*
 		Returns the suit of a card (see enum SUIT)
 	 */
-	SUIT getSuit();
+	string getSuit();
 
 	/*
 		Returns a string containing the card name as a string literal.
@@ -55,7 +56,29 @@ public:
 	string getCardName();
 
 private:
-	//No private properties required.
+
+	enum SUIT m_suit;
+	enum RANK m_rank;
+
+	/*
+		Returns a literal of the card rank. This will always be one or two letters in length.
+	 */
+	string getRankLiteral();
+
+	/*
+		Returns a literal of the card suit. In all cases this is a single letter
+	 */
+	string getSuitLiteral();
+
+	/*
+	Instantised method for calling overloaded method based on instance called
+ */
+string getSuitLiteral(SUIT s);
+
+/*
+	Instantised method for calling overloaded method based on instance called
+ */
+string getRankLiteral(RANK r);
 };
 
 #endif
