@@ -8,12 +8,9 @@
 
 #include <cstdlib>
 #include <ctime>
-    #include <cstdio>
+#include <cstdio>
 
 //The good ol' std namespace
-using namespace std;
-
-
 using namespace std;
 
 /*

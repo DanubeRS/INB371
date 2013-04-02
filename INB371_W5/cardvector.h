@@ -24,6 +24,11 @@ public:
     CardVector();
 
     /*
+        Creates a CardVector object with n spaces
+     */
+    CardVector(int n);
+
+    /*
         Deconstructs the CardVector object
      */
     ~CardVector();
@@ -50,7 +55,7 @@ public:
             cv.set(newC)
 
      */
-    void set(Card newC);
+    void set(unsigned int ind, Card newC);
 
     /*
         Adds a new card to the top of the stack. Will dynamically expand the vector if capacity has been reached
@@ -62,7 +67,7 @@ public:
         Usage:
             cv.insert(10, card);
      */
-    void insert (unsigned int ind, Card c);
+    void insert(unsigned int ind, Card c);
 
     /*
 		Removes the card at the specified index
@@ -77,19 +82,21 @@ public:
     void clear();
 private:
 	
-	static const int INITIAL_CAPACITY = 10;
+	static const int DEFAULT_INITIAL_CAPACITY = 10;
+    static const int DEFAULT_GROWTH_SIZE = 5;
 
-	Card *elements;			//Location of CV array
+	Card *m_elements;		//Location of CV array
 	unsigned int count;		//Count of cards in the CV
 	unsigned int capacity;	//The number of cards that the CV can currently hold without expansion
 
 	/*
-		Increases the capacity of the CV. Performs an array copy, and re-reference
+		Increases the capacity of the CV by n. Performs an array copy, and re-reference
 	 */
-	
-	void increaseCapacity();
+	void increaseCapacity(int n);
 
-}
+};
+
+#endif
 
 
 

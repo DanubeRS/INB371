@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include "card.h"
+    #include "deck.h"
 
 using namespace std;
 
@@ -38,5 +39,10 @@ int main()
 
     //TEST4 - Individual card properties
     cout << c2.getRank() << " and " << c2.getSuit() << endl;
+
+    //TEST5 - Generate new deck
+    Deck d = Deck();
+    d.SetStandardDeck();
+    d.DisplayDeck();
 
 }
