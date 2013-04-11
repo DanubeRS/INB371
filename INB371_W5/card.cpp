@@ -29,7 +29,9 @@ using namespace std;
 Card::Card()    //DEFAULT CONSTRUCTOR
 {
     //Default card constructor. Not recommended for production use.
-    cout << "INFO: Empty constructor used for card object. Not recommended for production use." << endl;
+    //cout << "INFO: Empty constructor used for card object. Not recommended for production use." << endl;
+    m_suit = (SUIT)0;
+    m_rank = (RANK)0;
 }
 
 /*
@@ -116,7 +118,7 @@ string Card::getRankLiteral(RANK r)
     case KING:
         return "K";
     default:
-        cout << "Internal Error." << endl;
+        cout << "Internal Error. " << "Value of " << r << endl;
         return "!"; //Return an error symbol
 
     }
@@ -138,7 +140,7 @@ string Card::getSuitLiteral(SUIT s)
         return "S";
 
     default:
-        cout << "Internal Error." << endl;
+        cout << "Internal Error. " << "Value of " << s << endl;
         return "!"; //Returns an error symbol if incorrect argument is passed
     }
 

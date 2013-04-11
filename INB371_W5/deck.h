@@ -15,7 +15,7 @@
 
 #include <string>
 #include "card.h"
-    #include "cardvector.h"
+#include "cardvector.h"
 
 using namespace std;
 
@@ -30,9 +30,19 @@ public:
     Deck();
 
     /*
+        Some decks can be pre-confined to have a certain number of cards. This constructor allocates enough storage for exactly n cards.
+     */
+    Deck(int n);
+
+    /*
         Deconstructs the deck, releasing resources
      */
     ~Deck();    //TO BE IMPLEMENTED
+    
+    /*
+        Creates a standard deck of 52 cards.
+     */
+    void SetStandardDeck();
 
     /*
         Performs a specified number of "swaps". Each iteration shuffles two cards.
@@ -60,22 +70,26 @@ public:
     void DisplayDeck();
 
 private:
-	/*
-		Swaps two elements int the stack. Used primarily for the "shuffle" method
-	 */
-	Swap();
 
-	/*
-		Pops the top element in the stack
-	 */
-	Card Pop();
+    //INSTANCE VARIALBES
+    CardVector deck;
 
-	/*
-		Takes a look at element n, and returns the object reference
-	 */
-	Card* Peek();
+    //PRIVATE INSTANCE METHODS
+    /*
+        Swaps two elements int the stack. Used primarily for the "shuffle" method
+     */
+    void Swap();
 
-}
+    /*
+        Pops the top element in the stack
+     */
+    Card Pop();
 
+    /*
+        Takes a look at element n, and returns the object reference
+     */
+    Card Peek();
 
+};
 
+#endif

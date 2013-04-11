@@ -18,8 +18,8 @@
 using namespace std;
 
 //Enumerator Declaration
-enum SUIT {CLUB = 0, DIAMOND, HEART, SPADE, _SUITS = 4};	//Four suit classes
-enum RANK {ACE = 0, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, _RANKS = 13};	//13 card ranks
+enum SUIT {CLUB = 0, DIAMOND, HEART, SPADE, SUITS = 4};	//Four suit classes
+enum RANK {ACE = 0, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, RANKS = 13};	//13 card ranks
 
 //FUNCTION DECLARATION
 class Card{
