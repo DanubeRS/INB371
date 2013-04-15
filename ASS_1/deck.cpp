@@ -15,10 +15,10 @@
 
 #include "card.h"
 #include "deck.h"
-#include "cardvector.h"
 #include "random.h"
 
 using namespace std;
+const unsigned int STANDARD_DECK = 52;
 
 //FUNCTION DECLARATION
 
@@ -27,44 +27,31 @@ using namespace std;
  */
 Deck::Deck()
 {
-    //Default Constructor. Empty deck
-    deck = CardVector();
-    cout << "DEBUG: Empty Deck created" << endl;
-}
-
-/*
-    Some decks can be pre-confined to have a certain number of cards. This constructor allocates enough storage for exactly n cards.
- */
-Deck::Deck(int n)
-{
-    deck = CardVector(n);
-}
-
-/*
-    Creates a standard deck of 52 cards.
- */
-void Deck::SetStandardDeck()
-{
-
-    //Iterating through the available cards, create the deck.
-    for (int s = 0; s < SUITS; s++)
+    deckContents = new Card* [STANDARD_DECK];   //Throw cards on the heap, enabling sizing at runtime
+    for (int suit = 0; suit < SUITS; suit++)
     {
-        for (int r = 0; r < RANKS; r++)
+        for (int rank = 0; rank < RANKS; rank++)
         {
-
-            Card c = Card((SUIT)s, (RANK)r);
-            cout << "Creating card... " << c.getCardName() << endl;
-            cout << "\t" << s << r << endl;
-            deck.add(c);
-
+            //Reference to a new heaped card
+            cards[suit * RANKS + rank] = new Card((RANK)rank, (SUITS)suit);
         }
     }
+
+    cardsInDeck = STANDARD_DECK;
 }
+
 
 /*
     De-constructs the deck, releasing resources
  */
-Deck::~Deck() {}   //TO BE IMPLEMENTED
+Deck::~Deck()
+{
+    for (int i = 0; i < STANDARD_DECK; i++)
+    {
+        delete deckContents[i]; //Remove referenced cards from the heap
+    }
+    delete[] deckContents;      //Remove card array pointer from the heap
+}
 
 /*
     Performs a specified number of "swaps". Each iteration shuffles two cards.
@@ -73,22 +60,14 @@ Deck::~Deck() {}   //TO BE IMPLEMENTED
  */
 void Deck::Shuffle(int n)
 {
+    unsigned int c1, c2;
+    Random randGen;
 
-    Card swap;      //Card to swap (from top to pos)
-    int pos;        //Position (random int of size - 1)
-    Random rand = Random();
-
-    if (deck.size() <= 1)
-    {
-        return;   //If the deck is only one card, don't bother shuffling
-    }
-
-    //Using the random interface defined previously, grab the top card, and place it somewhere randomly in the stack.
     for (int i = 0; i < n; i++)
     {
-        swap = Pop();
-        pos = rand.RandomInteger(0, deck.size() - 1);
-        deck.insert(pos, swap);
+        c1 = rand.RandomInteger(0, STANDARD_DECK - 1);
+        c2 = rand.RandomInteger(0, STANDARD_DECK - 1);
+        Swap(deckContents, c1, c2);
     }
 }
 
@@ -127,48 +106,11 @@ void Deck::DisplayDeck()
 /*
     Swaps two elements int the stack. Used primarily for the "shuffle" method
  */
-void Deck::Swap()
+void Deck::Swap(Card* cards[], unsigned int c1, unsigned int c2)
 {
-
-    //Unused method
-
+    Card* tmp = deckContents[c1];  //Allocate tempoary pointer for swap holding
+    deckContents[c1] = deckContents[c2];
+    deckContents[c2] = tmp;
 }
 
-/*
-    Pops the top element in the stack
- */
-Card Deck::Pop()
-{
-
-    //Check for an empty deck
-    if (deck.isEmpty())
-    {
-        cerr << "Cannot pop empty stack" << endl;
-        return Card();
-    }
-    else
-    {
-        //Get top card, and return it. Returned card will be popped off the top of the stack
-        Card poppedCard = Peek();
-        deck.remove(deck.size() - 1);
-        return poppedCard;
-    }
-}
-
-/*
-    Takes a look at element n, and returns the object reference
- */
-Card Deck::Peek()
-{
-    //Check for empty deck
-    if (deck.isEmpty())
-    {
-        cerr << "Cannot peek at an empty deck" << endl;
-        return Card();
-    }
-    else
-    {
-        return deck.getCard(deck.size() - 1);
-    }
-}
 

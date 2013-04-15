@@ -30,19 +30,9 @@ public:
     Deck();
 
     /*
-        Some decks can be pre-confined to have a certain number of cards. This constructor allocates enough storage for exactly n cards.
-     */
-    Deck(int n);
-
-    /*
         Deconstructs the deck, releasing resources
      */
     ~Deck();    //TO BE IMPLEMENTED
-    
-    /*
-        Creates a standard deck of 52 cards.
-     */
-    void SetStandardDeck();
 
     /*
         Performs a specified number of "swaps". Each iteration shuffles two cards.
@@ -72,24 +62,14 @@ public:
 private:
 
     //INSTANCE VARIALBES
-    CardVector deck;
+    Card** deckContents;    //Pointer to card array. Array containts pointers to enable easy shuffling
+    int cardsInDeck;        //Remaining cards in the deck (52 if full)
 
     //PRIVATE INSTANCE METHODS
     /*
         Swaps two elements int the stack. Used primarily for the "shuffle" method
      */
     void Swap();
-
-    /*
-        Pops the top element in the stack
-     */
-    Card Pop();
-
-    /*
-        Takes a look at element n, and returns the object reference
-     */
-    Card Peek();
-
 };
 
 #endif
