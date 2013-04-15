@@ -44,7 +44,7 @@ Card::Card(SUIT s, RANK r)
     m_rank = r;
 
     //DEBUG
-    cout << "Generated card: " << getRankLiteral(m_rank) << getSuitLiteral(m_suit) << endl;
+    //cout << "Generated card: " << getRankLiteral(m_rank) << getSuitLiteral(m_suit) << endl;
 
 }
 

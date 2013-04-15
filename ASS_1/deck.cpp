@@ -33,7 +33,7 @@ Deck::Deck()
         for (int rank = 0; rank < RANKS; rank++)
         {
             //Reference to a new heaped card
-            cards[suit * RANKS + rank] = new Card((RANK)rank, (SUITS)suit);
+            deckContents[suit * RANKS + rank] = new Card((SUIT)suit, (RANK)rank);
         }
     }
 
@@ -65,8 +65,8 @@ void Deck::Shuffle(int n)
 
     for (int i = 0; i < n; i++)
     {
-        c1 = rand.RandomInteger(0, STANDARD_DECK - 1);
-        c2 = rand.RandomInteger(0, STANDARD_DECK - 1);
+        c1 = randGen.RandomInteger(0, STANDARD_DECK - 1);
+        c2 = randGen.RandomInteger(0, STANDARD_DECK - 1);
         Swap(deckContents, c1, c2);
     }
 }
@@ -78,7 +78,7 @@ void Deck::Shuffle(int n)
  */
 Card Deck::DealNextCard()
 {
-    return Pop();
+    return *deckContents[cardsInDeck--];
 }
 
 /*
@@ -92,10 +92,10 @@ Card Deck::DealNextCard()
  */
 void Deck::DisplayDeck()
 {
-    for (int i = 0; i < deck.size(); i++)
+    for (int i = 0; i < cardsInDeck; i++)
     {
-        cout << deck.getCard(i).getCardName() << " ";
-        if (i % 13 == 0)
+        cout << deckContents[i]->getCardName() << " ";
+        if ((i+1) % 13 == 0)
         {
             cout << endl;   //Create a new line for each set of 13 cards displayed.
         }

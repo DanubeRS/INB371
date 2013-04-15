@@ -29,20 +29,19 @@ int main()
 
 
     //TEST1 - creating a card
-    Card c1 = Card();
+    //Card c1 = Card();
 
     //TEST2 - Create a filled card
-    Card c2 = Card(DIAMOND, ACE);
+    //Card c2 = Card(DIAMOND, ACE);
 
     //TEST3 - Print a string representation of c2
-    cout << c2.getCardName() << endl;
+    //cout << c2.getCardName() << endl;
 
     //TEST4 - Individual card properties
-    cout << c2.getRank() << " and " << c2.getSuit() << endl;
+    //cout << c2.getRank() << " and " << c2.getSuit() << endl;
 
     //TEST5 - Generate new deck
-    Deck d = Deck();
-    d.SetStandardDeck();
-    d.DisplayDeck();
+    //Deck d = Deck();
+    //d.DisplayDeck();
 
 }

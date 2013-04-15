@@ -69,7 +69,7 @@ private:
     /*
         Swaps two elements int the stack. Used primarily for the "shuffle" method
      */
-    void Swap();
+    void Swap(Card* cards[], unsigned int c1, unsigned int c2);
 };
 
 #endif
