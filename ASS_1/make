@@ -1,0 +1,2 @@
+all:
+		g++ assignment.cpp card.cpp deck.cpp random.cpp -o assignment
