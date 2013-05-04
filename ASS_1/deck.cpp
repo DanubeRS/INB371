@@ -27,8 +27,8 @@ Deck::~Deck() {
     delete[] cards;
 }
 
-Card Deck::DealNextCard() {
-    return *cards[cardsDealt++];
+Card* Deck::DealNextCard() {
+    return cards[cardsDealt++];
 }
 
 void Swap(Card* cards[], int idx1, int idx2) {

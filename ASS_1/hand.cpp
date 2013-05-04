@@ -1,112 +1,379 @@
-/*  ===IMPLEMENTATION FILE===
+/*
+    A hand is considered a special case of a deck.
+ */
 
-    Deck (c) Daniel Park 2013
-
-    A program which uses the OOP features of c++ to define a deck object. A deck is treated as a stack ADT, with shuffling
-
-    v0.1
-    ====
-    -Initial creation
-
-*/
-
-#include <string>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <vector>
+#include <algorithm>
+#include <cmath>
 
-#include "card.h"
+
 #include "deck.h"
+#include "card.h"
 #include "random.h"
 
-using namespace std;
-const unsigned int STANDARD_DECK = 52;
+#include "hand.h"
+#include "CardComparer.h"
 
-//FUNCTION DECLARATION
+using namespace std;
+
+const int HANDSIZE = 5;
 
 /*
-    Initialises a new Deck object, filling (in order) 52 cards from a standard deck
+    Constructs a hand with ID
  */
-Deck::Deck()
+Hand::Hand(int ID)
 {
-    deckContents = new Card* [STANDARD_DECK];   //Throw cards on the heap, enabling sizing at runtime
-    for (int suit = 0; suit < SUITS; suit++)
+    m_ID = ID;
+}
+
+/*
+    Deconstructor
+    (Currently not required)
+ */
+Hand::~Hand()
+{
+}
+
+/*
+    Adds a card to the hand. Catches error if more cards are dealt than needed.
+ */
+void Hand::AddCard(Card *c)
+{
+
+    if (!(cardsReceived >= HANDSIZE))
     {
-        for (int rank = 0; rank < RANKS; rank++)
+        cards.push_back(c);
+    }
+    else
+    {
+        cout << "An internal dealer error has occoured." << endl;
+    }
+}
+
+
+/*
+    Returns the value of the players hand. Used for calculating hand places when deeciding a winner.
+ */
+int Hand::getHandValue()
+{
+
+    /*
+        The premise behind the score evaluation process is to create a boolean array signifying if a card has been tallied up. Only cards which are still
+        valie (i.e: true) are considered.
+     */
+
+    //Make sure that the hand is sorted before calculating its value!
+    sort(cards.begin(), cards.end(), CardComparer());
+    std::vector<bool> counted (cards.size(), true);
+
+    int score = 0;
+    int iterate;
+
+    switch (this->getHandType())
+    {
+    case HIGHCARD:  //All cards get tallied
+        for (int i = 0; i < cards.size(); i++)
         {
-            //Reference to a new heaped card
-            deckContents[suit * RANKS + rank] = new Card((SUIT)suit, (RANK)rank);
+            score += ((int)(cards.at(i)->GetRank()) * (int)pow((double)10, (double)cards.size() - 1 - i));
+        }
+        break;
+    case ONEPAIR:   //Find the pair, then calculate it. After this, calculate the rest.
+        //find pair for calculation
+        iterate = cards.size() - 1;
+
+        for (int i = 0; i < (cards.size() - 1); i++)
+        {
+            if (cards.at(i)->GetRank() == cards.at(i + 1)->GetRank())
+            {
+                score += (int)cards.at(i)->GetRank() * (int)pow((double)10, (double)iterate);
+                counted.at(i) == false;
+                counted.at(i + 1) == false;
+                iterate--;
+            }
+        }
+        for (int i = 0; i < cards.size(); i++)
+        {
+            if (counted.at(i))
+            {
+                score += ((int)cards.at(i)->GetRank()) * (int)pow((double)10, (double)iterate);
+                iterate--;
+            }
+
+        }
+        break;
+    case THREEOFAKIND:   //Find the pair, then calculate it. After this, calculate the rest.
+        //find pair for calculation
+        iterate = cards.size() - 2;
+
+        for (int i = 0; i < (cards.size() - 2); i++)
+        {
+            if (cards.at(i)->GetRank() == cards.at(i + 1)->GetRank() == cards.at(i + 2)->GetRank())
+            {
+                score += (int)cards.at(i)->GetRank() * (int)pow((double)10, (double)iterate);
+                counted.at(i) == false;
+                counted.at(i + 1) == false;
+                counted.at( i + 2) == false;
+                iterate--;
+            }
+        }
+        for (int i = 0; i < cards.size(); i++)
+        {
+            if (counted.at(i))
+            {
+                score += ((int)cards.at(i)->GetRank()) * (int)pow((double)10, (double)iterate);
+                iterate--;
+            }
+
+        }
+        break;
+    case FOUROFAKIND:   //Find the pair, then calculate it. After this, calculate the rest.
+        //find pair for calculation
+        iterate = cards.size() - 3;
+
+        for (int i = 0; i < (cards.size() - 2); i++)
+        {
+            if (cards.at(i)->GetRank() == cards.at(i + 1)->GetRank() == cards.at(i + 2)->GetRank() == cards.at(i + 3)->GetRank())
+            {
+                score += (int)cards.at(i)->GetRank() * (int)pow((double)10, (double)iterate);
+                counted.at(i) == false;
+                counted.at(i + 1) == false;
+                counted.at( i + 2) == false;
+                counted.at(i + 3) == false;
+                iterate--;
+            }
+        }
+        for (int i = 0; i < cards.size(); i++)
+        {
+            if (counted.at(i))
+            {
+                score += ((int)cards.at(i)->GetRank()) * (int)pow((double)10, (double)iterate);
+                iterate--;
+            }
+
+        }
+        break;
+    case STRAIGHT:
+        score = (int)cards.at(0)->GetRank();
+        break;
+
+    case TWOPAIR:
+        //This case needs us to find the highest value of the two pairs.
+        Rank previousHighest;
+        Rank currentPair;
+        for (int i = 0; i < (cards.size() - 1); i++)
+        {
+            if (cards.at(i)->GetRank() == cards.at(i + 1)->GetRank())
+            {
+                previousHighest = currentPair;
+                currentPair = cards.at(1)->GetRank();
+                counted.at(i) == false;
+                counted.at(i + 1) == false;
+                if (currentPair > previousHighest)
+                {
+
+                    score = (currentPair) * (int)pow((double)10, (double)2) +
+                            (previousHighest) * (int)pow((double)10, (double)1);
+                }
+                else if (currentPair < previousHighest)
+                {
+                    score = (previousHighest) * (int)pow((double)10, (double)2) +
+                            (currentPair) * (int)pow((double)10, (double)1);
+                }
+            }
+        }
+        for (int i = 0; i < (cards.size()); i++)
+        {
+            if (counted.at(i))
+            {
+                score += (int)cards.at(i)->GetRank();
+            }
+        }
+
+    default:
+    {
+        //Nothing
+    }
+    }
+    return score;
+
+
+}
+
+Card *Hand::getCard(int n)
+{
+    return cards.at(n);
+}
+
+int Hand::getHandSize(){
+    return cards.size();
+}
+
+void Hand::DisplayHand()
+{
+    sort(cards.begin(), cards.end(), CardComparer());
+
+    cout << "Player " << m_ID << ": [";
+
+    for (int i = 0; i < cards.size(); i++)
+    {
+        cout << cards.at(i)->GetCardName() << " ";
+
+    }
+    cout << "] ";
+}
+
+
+/*
+    Evaluates the current game dealt.
+ */
+void Hand::Evaluate(Hand *game)
+{
+
+}
+
+string Hand::toString()
+{
+
+    switch (getHandType())
+    {
+    case HIGHCARD:
+        return "High Card";
+    case ONEPAIR:
+        return "One Pair";
+    case TWOPAIR:
+        return "Two pairs";
+    case THREEOFAKIND:
+        return "Three of a Kind";
+    case STRAIGHT:
+        return "Straight";
+    case FLUSH:
+        return "Flush";
+    case FULLHOUSE:
+        return "Full Hosue";
+    case FOUROFAKIND:
+        return "Four of a kind";
+    case STRAIGHTFLUSH:
+        return "Straight Flush";
+    }
+}
+
+int Hand::getID()
+{
+    return m_ID;
+}
+
+/*
+        The idea behind HandType is to progressively work through the hand types specified.
+ */
+HandType Hand::getHandType()
+{
+    /*
+        Calculate the best hand type. As it is near impossible to check with total generecism, multiple cases need to be examined.
+     */
+
+    //Sorting is required to easily test the set.
+    sort(cards.begin(), cards.end(), CardComparer());
+
+
+    // Calculate simmilar cards by "binning" them into rank.
+    int *bins = new int[(int)RANKS];
+
+    for (int i = 0; i < cards.size(); i++)
+    {
+        bins[(int)(cards.at(i)->GetRank())]++;
+    }
+
+
+    //Calculate number of pairs
+    int pairs = 0;
+    for (int i = 0; i < RANKS; i++)
+    {
+        if ( bins[i] == 2)
+        {
+            pairs++;
         }
     }
 
-    cardsInDeck = STANDARD_DECK;
-}
-
-
-/*
-    De-constructs the deck, releasing resources
- */
-Deck::~Deck()
-{
-    for (int i = 0; i < STANDARD_DECK; i++)
+    //Check if set contains a triplet (Maximum of one can occour)
+    bool triplet = false;
+    for (int i = 0; i < RANKS; i++)
     {
-        delete deckContents[i]; //Remove referenced cards from the heap
+        if ( bins[i] == 3)
+        {
+            triplet = true;
+        }
     }
-    delete[] deckContents;      //Remove card array pointer from the heap
-}
-
-/*
-    Performs a specified number of "swaps". Each iteration shuffles two cards.
-    Usage:
-        Shuffle(n)
- */
-void Deck::Shuffle(int n)
-{
-    unsigned int c1, c2;
-    Random randGen;
-
-    for (int i = 0; i < n; i++)
+    bool quadruplet = false;
+    //Check if set contains a quadruplet (Maximum of one can occour)
+    for (int i = 0; i < RANKS; i++)
     {
-        c1 = randGen.RandomInteger(0, STANDARD_DECK - 1);
-        c2 = randGen.RandomInteger(0, STANDARD_DECK - 1);
-        Swap(deckContents, c1, c2);
+        if ( bins[i] == 4)
+        {
+            quadruplet = true;
+        }
     }
-}
 
-/*
-    Deals a cards from the top of the deck
-    Usage:
-        Card c = Deal();
- */
-Card Deck::DealNextCard()
-{
-    return *deckContents[cardsInDeck--];
-}
 
-/*
-    Deal (int n)
-    Deals n cards from the top of the deck
- */
-//Card* DealNCards(int n);   TBI
-
-/*
-    Displays the remaining cards in the deck. prints to stdout
- */
-void Deck::DisplayHand()
-{
-    for (int i = 0; i < cardsInDeck; i++)
+    //check for a straight
+    bool straight = true;
+    for (int i = 0; i < cards.size() - 1; i++)
     {
-        cout << deckContents[i]->getCardName() << " ";
+        straight = straight && ((int)(cards.at(i)->GetRank()) == (int)(cards.at(i + 1)->GetRank()) + 1);    //Evaluates to false as soon as a sequence is broken.
     }
+
+    //Check for a flush
+    bool flush = true;
+    for (int i = 0; i < cards.size() - 1; i++)
+    {
+        flush = flush && (cards.at(i)-> GetSuit() == cards.at(i + 1)->GetSuit());       //Evaluates to false as soon as a sequence is broken.
+    }
+
+    //Test all hand properties to derive what type of hand it is (Simmilar to traversing a logic tree)
+    switch (pairs)
+    {
+    case 0:
+        bestHandType = HIGHCARD;
+
+        //Check for non-sequential hand types
+        if (flush)
+        {
+            if (straight)
+            {
+                bestHandType = STRAIGHTFLUSH;
+                break;
+            }
+            else
+            {
+                bestHandType = STRAIGHT;
+                break;
+            }
+        }
+        else if (straight)
+        {
+            bestHandType = FLUSH;
+            break;
+        }
+        else
+        {
+            bestHandType = HIGHCARD;
+        }
+        break;
+
+    case 1:
+
+        bestHandType = ONEPAIR;                 //One Pair
+        if ( triplet )
+        {
+            bestHandType = FULLHOUSE;           //Full house (A pair, plus a triplet)
+        }
+        break;
+    case 2:
+        bestHandType = TWOPAIR;
+        break;
+    }
+
+    return bestHandType;
 }
-
-
-/*
-    Swaps two elements int the stack. Used primarily for the "shuffle" method
- */
-void Deck::Swaps(Card* cards[], unsigned int c1, unsigned int c2)
-{
-    Card* tmp = deckContents[c1];  //Allocate tempoary pointer for swap holding
-    deckContents[c1] = deckContents[c2];
-    deckContents[c2] = tmp;
-}
-
-

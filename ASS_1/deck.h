@@ -11,7 +11,7 @@ class Deck {
     public:
         Deck();
         ~Deck();
-        Card DealNextCard();
+        Card* DealNextCard();
         void Shuffle();
         void DisplayDeck();
         

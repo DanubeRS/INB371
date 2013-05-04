@@ -1,66 +1,63 @@
-/*  ===HEADER FILE===
+/*
+    A hand is considered a special case of a deck.
+ */
 
-    Hand (c) Daniel Park 2013
+#include <iostream>
+#include <iomanip>
+#include <vector>
 
-    A class which emulates the holding of a poker hand. A hand contains exactly 5 cards, 
-    and contains an inbuilt hand evaluator
-
-    v0.1
-    ====
-    -Initial creation
-
-*/
+#include "card.h"
 
 #ifndef _hand_h_
 #define _hand_h_
 
-#include <string>
-#include "card.h"
+const int NUM_SHUFFLES = 1000;
+const int MAX_HAND_SIZE = 5;
 
-using namespace std;
-
-//FUNCTION DECLARATION
-class Deck
+enum HandType
 {
+    HIGHCARD = 0, ONEPAIR, TWOPAIR, THREEOFAKIND, STRAIGHT, FLUSH, FULLHOUSE, FOUROFAKIND, STRAIGHTFLUSH
+};
 
+class Hand
+{
 public:
-    /*
-        Initialises the object, creating an empty hand to be filled at a later point
-     */
-    Hand();
+    Hand(int ID);
+
+    ~Hand();
+
+    void AddCard(Card *c);
+
+
+    void GetValue();
+
+
+    void DisplayHand();
 
     /*
-        Deconstructs the hand, releasing resources
+        Evaluates the current game dealt.
      */
-    ~Hand();    //TO BE IMPLEMENTED
+    void Evaluate(Hand *game);
 
-    /*
-        Accepts a card from the dealer. Returns false if the hand is full to indicate an internal dealing error
-     */
-    bool AcceptCard(Card c)
+    HandType getHandType();
 
-    /*
-        Deal (int n)
-        Deals n cards from the top of the deck
-     */
-    //Card* DealNCards(int n);   TBI
+    string toString();
 
-    /*
-        Displays the remaining cards in the deck. prints to stdout
-     */
-    void DisplayDeck();
+    int getHandValue();
+
+    int getID();
+
+    int getHandSize();
+
+    Card* getCard(int n);
 
 private:
+    int m_ID;       //Hand ID
+    int cardsReceived;
+    vector<Card *> cards;
+    HandType bestHandType;
 
-    //INSTANCE VARIALBES
-    Card** deckContents;    //Pointer to card array. Array containts pointers to enable easy shuffling
-    int cardsInDeck;        //Remaining cards in the deck (52 if full)
 
-    //PRIVATE INSTANCE METHODS
-    /*
-        Swaps two elements int the stack. Used primarily for the "shuffle" method
-     */
-    void Swap(Card* cards[], unsigned int c1, unsigned int c2);
 };
 
 #endif

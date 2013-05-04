@@ -11,6 +11,7 @@ using namespace std;
 #ifndef _card_h
 #define _card_h
 
+const int RANKS = 13;
 /* Enumeration type for the four suits of standard playing cards */
 enum Suit {
 	CLUBS, DIAMONDS, HEARTS, SPADES
@@ -18,7 +19,7 @@ enum Suit {
 
 /* Enumeration type for the thirteen ranks of standard playing cards */
 enum Rank {
-	TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
+	TWO = 0, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
 };
 
 /* Card type definition consisting of a rank and a suit */
