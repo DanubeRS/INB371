@@ -17,4 +17,22 @@ int main() {
 }
 
 int GCD(int x, int y) {
+
+	//We need to figure out which number is smallest
+	
+	int small, large;
+	if (x > y){
+		small = y;
+		large = x;
+	} else {
+		small = x;
+		large = y;
+	}
+
+	//If evenly divisible
+	if (large % small == 0){
+		return small;
+	} else {
+		return GCD(large % small, small);
+	}
 }
