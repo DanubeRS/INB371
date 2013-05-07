@@ -6,13 +6,18 @@
 #ifndef _treenode_h
 #define _treenode_h
 
-typedef char ElemType;
+#include <string>
 
-class TreeNode {
+typedef     std::string     KeyType;
+typedef     int             ValueType;
+
+class TreeNode
+{
 private:
 
     // data
-    ElemType key;
+    KeyType key;
+    ValueType val;
 
     // pointers to child nodes
     TreeNode *lChild;
@@ -21,22 +26,27 @@ private:
 public:
     /*Constructor initialises an object oif type TreeNode with key and sets left and
       right child pointers to NULL. */
-    TreeNode(ElemType key);
+    TreeNode(KeyType key, ValueType val);
 
     /* Destructor */
     ~TreeNode();
 
     /* Accessors to private TreeNode fields */
-    ElemType GetKey();
-    TreeNode* GetLChild();
-    TreeNode* GetRChild();
+    KeyType GetKey();
+    TreeNode *GetLChild();
+    TreeNode *GetRChild();
 
     /* Mutators for attaching new child nodes to an existing node */
     void SetLChild(TreeNode *child);
     void SetRChild(TreeNode *child);
 
     /* Mutator for key - only used in delete */
-    void SetKey(ElemType key);
+    void SetKey(KeyType key);
+
+    void SetValue(ValueType val);
+
+    ValueType GetValue();
+
 
 };
 

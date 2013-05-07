@@ -42,15 +42,15 @@ void BST::Clear(TreeNode *tree) {
 }
 
 /* Search for a key in the tree.  Return true if it exists otherwise return false */
-bool BST::Search(ElemType key) {
+ValueType BST::Search(KeyType key) {
     return Search(tree, key);
 }
 
 /* Recursive implementation of search function */
-bool BST::Search(TreeNode *tree, ElemType key) {
+ValueType BST::Search(TreeNode *tree, KeyType key) {
     if (tree != NULL) {
         if (key == tree->GetKey()) {
-            return true;
+            return tree->GetValue();
         } else if (key < tree->GetKey()) {
             return Search(tree->GetLChild(), key);
         } else {
@@ -62,38 +62,38 @@ bool BST::Search(TreeNode *tree, ElemType key) {
 }
 
 /* Insert a key in the tree.  If key already exists, do not insert. */
-void BST::Insert(ElemType key) {
+void BST::Insert(KeyType key, ValueType val) {
     if (tree == NULL) {
-        tree = new TreeNode(key);
+        tree = new TreeNode(key, val);
 		size = 1;
     } else {
-        Insert(tree, key);
+        Insert(tree, key, val);
     }
 }
 
 /* Recursive imeplementation of insert function */
-void BST::Insert(TreeNode* tree, ElemType key) {
+void BST::Insert(TreeNode* tree, KeyType key, ValueType val) {
     if (key < tree->GetKey()) {
         if (tree->GetLChild() == NULL) {
-            tree->SetLChild(new TreeNode(key));
+            tree->SetLChild(new TreeNode(key, val));
 			size++;
         } else {
-            Insert(tree->GetLChild(), key);
+            Insert(tree->GetLChild(), key, val);
         }
 
     // what happens if explicit check is not made
     } else if (key > tree->GetKey()){
         if (tree->GetRChild() == NULL) {
-            tree->SetRChild(new TreeNode(key));
+            tree->SetRChild(new TreeNode(key, val));
 			size++;
         } else {
-            Insert(tree->GetRChild(), key);
+            Insert(tree->GetRChild(), key, val);
         }
     }
 }
 
 /* Delete key in tree if it exists */
-void BST::Delete(ElemType key) {
+void BST::Delete(KeyType key, ValueType val) {
 
     // search for item and its parent
     TreeNode *current = tree;
@@ -131,8 +131,9 @@ void BST::Delete(ElemType key) {
                 }
 
                 // copy the item at p to current
-                ElemType key = p->GetKey();
+                KeyType key = p->GetKey();
                 current->SetKey(key);
+                current->SetValue(val);
                 TreeNode *temp = p->GetLChild();
                 pp->SetRChild(temp);
                 delete p;
@@ -198,3 +199,22 @@ void BST::PreOrderTraversal(TreeNode *tree) {
     }
 }
 
+void BST::Update(KeyType key, ValueType val){
+    Update(tree, key, val);
+}
+
+/* Recursive implementation of search function */
+void BST::Update(TreeNode *tree, KeyType key, ValueType val) {
+    if (tree != NULL) {
+        if (key == tree->GetKey()) {
+            tree->SetValue(val);
+        } else if (key < tree->GetKey()) {
+            Update(tree->GetLChild(), key, val);
+        } else {
+            Update(tree->GetRChild(), key, val);
+        }
+    } else {
+        //Something bad happened here!
+        return;
+    }
+}

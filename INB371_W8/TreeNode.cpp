@@ -11,8 +11,9 @@ using namespace std;
 
 /* Constructor initialises an object of type TreeNode with key and sets left and
    right child pointers to NULL. */
-TreeNode::TreeNode(ElemType key) {
+TreeNode::TreeNode(KeyType key, ValueType val) {
     this->key = key;
+    this->val = val;
     this->lChild = NULL;
     this->rChild = NULL;
 }
@@ -23,7 +24,7 @@ TreeNode::~TreeNode() {
 }
 
 /* Accessors to private TreeNode fields */
-ElemType TreeNode::GetKey() {
+KeyType TreeNode::GetKey() {
     return key;
 }
 
@@ -45,8 +46,16 @@ void TreeNode::SetRChild(TreeNode *child) {
 }
 
 /* Mutator for key - only used in delete */
-void TreeNode::SetKey(ElemType key) {
+void TreeNode::SetKey(KeyType key) {
     this->key = key;
+}
+
+void TreeNode::SetValue(ValueType val){
+    this->val = val;
+}
+
+ValueType TreeNode::GetValue(){
+    return val;
 }
 
 
