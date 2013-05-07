@@ -15,12 +15,12 @@ int main() {
     Random rand;
 	vector<int> values;
 	for (int i = 0; i < NUM_VALUES; i++) {
-		values.push_back(rand.GetRandomInteger(0, 100));
+		values.push_back(rand.RandomInteger(0, 100));
 		cout << values[i] << " ";
 	}
 	cout << endl;
 
-	Sort(values);
+	MergeSort(values);
 	//Quicksort(values, 0, values.size() - 1);
 
 	for (int i = 0; i < NUM_VALUES; i++) {

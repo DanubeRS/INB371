@@ -5,6 +5,7 @@
  */
 #include <iostream>
 #include <cstdlib>
+#include <cmath>
 
 
 using namespace std;
@@ -38,7 +39,7 @@ int Cannonball(int n)
     }
     else if (n > 1)
     {
-        balls += Cannonball(n - 1);
+        balls = Cannonball(n - 1) + pow(n, 2);
     }
     else
     {
