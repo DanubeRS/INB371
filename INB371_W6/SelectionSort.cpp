@@ -14,23 +14,39 @@ const int N = 100;
  * Sorts an array of int using the selection sort algorithm.
  * Performance is O(N^2)
  */
-void SelectionSort(int *);
+template<typename ValueType>
+void SelectionSort(ValueType *);
 
 int main() {
 
 	// fill an array with random integers
-	int values[N];
+	int intValues[N];
+	float floatValues[N];
+
+	//Init the random number generator captian!
 	Random random;
+
 	for (int i = 0; i < N; i++) {
-		values[i] = random.RandomInteger(0, N);
+		intValues[i] = random.RandomInteger(0, N);
 	}
 
+	for (int i = 0; i < N; i++) {
+		floatValues[i] = random.RandomInteger(0, N)* 0.123f * random.RandomInteger(0, 10);
+	}
+
+
+
 	// sort
-	SelectionSort(values);
+	SelectionSort(intValues);
+	SelectionSort(floatValues);
 
 	// output
 	for (int i = 0; i < N; i++) {
-		cout << values[i] << " ";
+		cout << intValues[i] << " ";
+	}
+
+	for (int i = 0; i < N; i++) {
+		cout << floatValues[i] << " ";
 	}
 	cout << endl;
 
@@ -41,20 +57,22 @@ int main() {
  * Sorts an array of int using the selection sort algorithm.
  * Performance is O(N^2)
  */
-void SelectionSort(int *values) {
+template <typename ValueType>
+void SelectionSort(ValueType *values) {
 
 	// for each position in the array
 	for (int lh = 0; lh < N; lh++) {
 
 		// find the smallest value in the unsorted portion of the array
 		int rh = lh;
+		
 		for (int i = lh + 1; i < N; i++) {
 			if (values[i] < values[rh]) 
 				rh = i;
 		}
 
 		// swap the values
-		int temp = values[lh];
+		ValueType temp = values[lh];
 		values[lh] = values[rh];
 		values[rh] = temp;
 	}
