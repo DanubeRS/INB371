@@ -42,12 +42,12 @@ void BST::Clear(TreeNode *tree) {
 }
 
 /* Search for a key in the tree.  Return true if it exists otherwise return false */
-bool BST::Search(ElemType key) {
+bool BST::Search(KeyType key) {
     return Search(tree, key);
 }
 
 /* Recursive implementation of search function */
-bool BST::Search(TreeNode *tree, ElemType key) {
+bool BST::Search(TreeNode *tree, KeyType key) {
     if (tree != NULL) {
         if (key == tree->GetKey()) {
             return true;
@@ -62,38 +62,38 @@ bool BST::Search(TreeNode *tree, ElemType key) {
 }
 
 /* Insert a key in the tree.  If key already exists, do not insert. */
-void BST::Insert(ElemType key) {
+void BST::Insert(KeyType key, ValueType val) {
     if (tree == NULL) {
-        tree = new TreeNode(key);
+        tree = new TreeNode(key, val);
 		size = 1;
     } else {
-        Insert(tree, key);
+        Insert(tree, key, val);
     }
 }
 
 /* Recursive imeplementation of insert function */
-void BST::Insert(TreeNode* tree, ElemType key) {
+void BST::Insert(TreeNode* tree, KeyType key, ValueType val) {
     if (key < tree->GetKey()) {
         if (tree->GetLChild() == NULL) {
-            tree->SetLChild(new TreeNode(key));
+            tree->SetLChild(new TreeNode(key, val));
 			size++;
         } else {
-            Insert(tree->GetLChild(), key);
+            Insert(tree->GetLChild(), key, val);
         }
 
     // what happens if explicit check is not made
     } else if (key > tree->GetKey()){
         if (tree->GetRChild() == NULL) {
-            tree->SetRChild(new TreeNode(key));
+            tree->SetRChild(new TreeNode(key, val));
 			size++;
         } else {
-            Insert(tree->GetRChild(), key);
+            Insert(tree->GetRChild(), key, val);
         }
     }
 }
 
 /* Delete key in tree if it exists */
-void BST::Delete(ElemType key) {
+void BST::Delete(KeyType key) {
 
     // search for item and its parent
     TreeNode *current = tree;
@@ -117,6 +117,7 @@ void BST::Delete(ElemType key) {
             if (current->GetLChild()->GetRChild() == NULL) {  // a special case
                 TreeNode *temp = current->GetLChild();
                 current->SetKey(current->GetLChild()->GetKey());
+                current->SetValue(current->GetLChild()->GetValue());
                 current->SetLChild(current->GetLChild()->GetLChild());
                 delete temp;
                 size--;
@@ -131,7 +132,7 @@ void BST::Delete(ElemType key) {
                 }
 
                 // copy the item at p to current
-                ElemType key = p->GetKey();
+                KeyType key = p->GetKey();
                 current->SetKey(key);
                 TreeNode *temp = p->GetLChild();
                 pp->SetRChild(temp);
@@ -196,5 +197,24 @@ void BST::PreOrderTraversal(TreeNode *tree) {
         PreOrderTraversal(tree->GetLChild());
         PreOrderTraversal(tree->GetRChild());
     }
+}
+
+void BST::Update(TreeNode *tree, KeyType key, ValueType val){
+
+    if (tree != NULL) {
+        if (key == tree->GetKey()) {
+            tree->SetValue(val);    //Set the value of the tree node.
+        } else if (key < tree->GetKey()) {
+            Update(tree->GetLChild(), key, val);
+        } else {
+            Update(tree->GetRChild(), key, val);
+        }
+    } else {
+        cout << "Update Unsuccessful. Tree is empty" << endl;
+    } 
+}
+
+void BST::Update(KeyType key, ValueType val){
+    Update(tree, key, val);
 }
 
