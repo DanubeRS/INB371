@@ -27,11 +27,11 @@ KeyType TreeNode::GetKey() {
     return key;
 }
 
-TreeNode* TreeNode::GetLChild() {
+TreeNode *TreeNode::GetLChild() {
     return lChild;
 }
 
-TreeNode* TreeNode::GetRChild() {
+TreeNode *TreeNode::GetRChild() {
     return rChild;
 }
 
@@ -49,14 +49,14 @@ void TreeNode::SetKey(KeyType key) {
     this->key = key;
 }
 
-void TreeNode::SetValue(ValueType val){
+void TreeNode::SetValue(ValueType val) {
 
-   this->value =  val;
+    this->value =  val;
 
 }
-ValueType TreeNode::GetValue(){
+ValueType TreeNode::GetValue() {
 
-   return this->value;
+    return this->value;
 
 }
 

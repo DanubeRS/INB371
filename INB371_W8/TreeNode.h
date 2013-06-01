@@ -11,8 +11,7 @@
 typedef std::string KeyType;
 typedef int ValueType;
 
-class TreeNode
-{
+class TreeNode {
 private:
 
     // data

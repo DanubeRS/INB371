@@ -7,7 +7,7 @@ using namespace std;
 
 BST::BST() {
     tree = NULL;
-	size = 0;
+    size = 0;
 }
 
 BST::~BST() {
@@ -61,31 +61,49 @@ bool BST::Search(TreeNode *tree, KeyType key) {
     }
 }
 
+ValueType BST::GetValue(KeyType key){
+    return GetValue(tree, key);
+}
+
+ValueType BST::GetValue(TreeNode *tree, KeyType key) {
+    if (tree != NULL) {
+        if (key == tree->GetKey()) {
+            return tree->GetValue();
+        } else if (key < tree->GetKey()) {
+            return GetValue(tree->GetLChild(), key);
+        } else {
+            return GetValue(tree->GetRChild(), key);
+        }
+    } else {
+        return false;
+    }
+}
+
 /* Insert a key in the tree.  If key already exists, do not insert. */
 void BST::Insert(KeyType key, ValueType val) {
     if (tree == NULL) {
         tree = new TreeNode(key, val);
-		size = 1;
+        size = 1;
     } else {
         Insert(tree, key, val);
     }
 }
 
 /* Recursive imeplementation of insert function */
-void BST::Insert(TreeNode* tree, KeyType key, ValueType val) {
+void BST::Insert(TreeNode *tree, KeyType key, ValueType val) {
     if (key < tree->GetKey()) {
         if (tree->GetLChild() == NULL) {
             tree->SetLChild(new TreeNode(key, val));
-			size++;
+            size++;
         } else {
             Insert(tree->GetLChild(), key, val);
         }
 
-    // what happens if explicit check is not made
-    } else if (key > tree->GetKey()){
+        // what happens if explicit check is not made
+    } else if (key > tree->GetKey()) {
         if (tree->GetRChild() == NULL) {
             tree->SetRChild(new TreeNode(key, val));
-			size++;
+            size++;
         } else {
             Insert(tree->GetRChild(), key, val);
         }
@@ -199,7 +217,7 @@ void BST::PreOrderTraversal(TreeNode *tree) {
     }
 }
 
-void BST::Update(TreeNode *tree, KeyType key, ValueType val){
+void BST::Update(TreeNode *tree, KeyType key, ValueType val) {
 
     if (tree != NULL) {
         if (key == tree->GetKey()) {
@@ -211,10 +229,10 @@ void BST::Update(TreeNode *tree, KeyType key, ValueType val){
         }
     } else {
         cout << "Update Unsuccessful. Tree is empty" << endl;
-    } 
+    }
 }
 
-void BST::Update(KeyType key, ValueType val){
+void BST::Update(KeyType key, ValueType val) {
     Update(tree, key, val);
 }
 

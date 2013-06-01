@@ -27,7 +27,7 @@ public:
     /* Delete key in tree if it exists */
     void Delete(KeyType key);
 
-	/* Search for a key in the tree.  Return true if it exists otherwise return false */
+    /* Search for a key in the tree.  Return true if it exists otherwise return false */
     bool Search(KeyType key);
 
     /* Clear the contents of the BST */
@@ -41,9 +41,11 @@ public:
     void InOrderTraversal();
     void PostOrderTraversal();
 
+    ValueType GetValue(KeyType key);
+
 private:
     TreeNode *tree;
-	int size;
+    int size;
     void Clear(TreeNode *tree);
 
     /* Inserts the specified key at the appropriate location in the BST rooted at tree. */
@@ -55,10 +57,12 @@ private:
     void PreOrderTraversal(TreeNode *tree);
     void PostOrderTraversal(TreeNode *tree);
 
-	/* Recursive implementation of search function */
+    /* Recursive implementation of search function */
     bool Search(TreeNode *tree, KeyType key);
 
     void Update(TreeNode *tree, KeyType key, ValueType val);
+
+    ValueType GetValue(TreeNode *tree, KeyType key);
 };
 
 #endif // _bst_h
