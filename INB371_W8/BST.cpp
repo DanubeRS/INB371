@@ -5,28 +5,32 @@
 
 using namespace std;
 
-
-BST::BST() {
+template <typename TypeName>
+BST<TypeName>::BST() {
     tree = NULL;
     size = 0;
 }
 
-BST::~BST() {
+template <typename TypeName>
+BST<TypeName>::~BST() {
     Clear(tree);
 }
 
 /* Resturns true if tree is empty, false otherwise */
-bool BST::IsEmpty() {
+template <typename TypeName>
+bool BST<TypeName>::IsEmpty() {
     return tree == NULL;
 }
 
 /* Resturns numnber of nodes in the tree */
-int BST::Size() {
+template <typename TypeName>
+int BST<TypeName>::Size() {
     return size;
 }
 
 /* Clears all nodes from the tree */
-void BST::Clear() {
+template <typename TypeName>
+void BST<TypeName>::Clear() {
     Clear(tree);
     tree = NULL;
     size = 0;
@@ -34,7 +38,8 @@ void BST::Clear() {
 
 /* Clears all nodes from the tree by recursively walking in post-order
    deleting all dynamically allocated nodes. */
-void BST::Clear(TreeNode *tree) {
+template <typename TypeName>
+void BST<TypeName>::Clear(TreeNode<TypeName> *tree) {
     if (tree != NULL) {
         Clear(tree->GetLChild());
         Clear(tree->GetRChild());
@@ -43,12 +48,14 @@ void BST::Clear(TreeNode *tree) {
 }
 
 /* Search for a key in the tree.  Return true if it exists otherwise return false */
-bool BST::Search(KeyType key) {
+template <typename TypeName>
+bool BST<TypeName>::Search(TypeName key) {
     return Search(tree, key);
 }
 
 /* Recursive implementation of search function */
-bool BST::Search(TreeNode *tree, KeyType key) {
+template <typename TypeName>
+bool BST<TypeName>::Search(TreeNode<TypeName> *tree, TypeName key) {
     if (tree != NULL) {
         if (key == tree->GetKey()) {
             return true;
@@ -62,11 +69,13 @@ bool BST::Search(TreeNode *tree, KeyType key) {
     }
 }
 
-ValueType BST::GetValue(KeyType key){
+template <typename TypeName>
+ValueType BST<TypeName>::GetValue(TypeName key){
     return GetValue(tree, key);
 }
 
-ValueType BST::GetValue(TreeNode *tree, KeyType key) {
+template <typename TypeName>
+ValueType BST<TypeName>::GetValue(TreeNode<TypeName> *tree, TypeName key) {
     if (tree != NULL) {
         if (key == tree->GetKey()) {
             return tree->GetValue();
@@ -81,9 +90,10 @@ ValueType BST::GetValue(TreeNode *tree, KeyType key) {
 }
 
 /* Insert a key in the tree.  If key already exists, do not insert. */
-void BST::Insert(KeyType key, ValueType val) {
+template <typename TypeName>
+void BST<TypeName>::Insert(TypeName key, ValueType val) {
     if (tree == NULL) {
-        tree = new TreeNode(key, val);
+        tree = new TreeNode<TypeName>(key, val);
         size = 1;
     } else {
         Insert(tree, key, val);
@@ -91,10 +101,11 @@ void BST::Insert(KeyType key, ValueType val) {
 }
 
 /* Recursive imeplementation of insert function */
-void BST::Insert(TreeNode *tree, KeyType key, ValueType val) {
+template <typename TypeName>
+void BST<TypeName>::Insert(TreeNode<TypeName> *tree, TypeName key, ValueType val) {
     if (key < tree->GetKey()) {
         if (tree->GetLChild() == NULL) {
-            tree->SetLChild(new TreeNode(key, val));
+            tree->SetLChild(new TreeNode<TypeName>(key, val));
             size++;
         } else {
             Insert(tree->GetLChild(), key, val);
@@ -103,7 +114,7 @@ void BST::Insert(TreeNode *tree, KeyType key, ValueType val) {
         // what happens if explicit check is not made
     } else if (key > tree->GetKey()) {
         if (tree->GetRChild() == NULL) {
-            tree->SetRChild(new TreeNode(key, val));
+            tree->SetRChild(new TreeNode<TypeName>(key, val));
             size++;
         } else {
             Insert(tree->GetRChild(), key, val);
@@ -112,11 +123,12 @@ void BST::Insert(TreeNode *tree, KeyType key, ValueType val) {
 }
 
 /* Delete key in tree if it exists */
-void BST::Delete(KeyType key) {
+template <typename TypeName>
+void BST<TypeName>::Delete(TypeName key) {
 
     // search for item and its parent
-    TreeNode *current = tree;
-    TreeNode *parent = NULL;
+    TreeNode<TypeName> *current = tree;
+    TreeNode<TypeName> *parent = NULL;
     while (current != NULL && key != current->GetKey()) {
         parent = current;
         if (key < current->GetKey()) {
@@ -134,15 +146,15 @@ void BST::Delete(KeyType key) {
 
             // find the right-most node in the left subtree
             if (current->GetLChild()->GetRChild() == NULL) {  // a special case
-                TreeNode *temp = current->GetLChild();
+                TreeNode<TypeName> *temp = current->GetLChild();
                 current->SetKey(current->GetLChild()->GetKey());
                 current->SetValue(current->GetLChild()->GetValue());
                 current->SetLChild(current->GetLChild()->GetLChild());
                 delete temp;
                 size--;
             } else {
-                TreeNode *p = current->GetLChild()->GetRChild();
-                TreeNode *pp = current->GetLChild();
+                TreeNode<TypeName> *p = current->GetLChild()->GetRChild();
+                TreeNode<TypeName> *pp = current->GetLChild();
 
                 // walk right
                 while (p->GetRChild() != NULL) {
@@ -151,15 +163,15 @@ void BST::Delete(KeyType key) {
                 }
 
                 // copy the item at p to current
-                KeyType key = p->GetKey();
+                TypeName key = p->GetKey();
                 current->SetKey(key);
-                TreeNode *temp = p->GetLChild();
+                TreeNode<TypeName> *temp = p->GetLChild();
                 pp->SetRChild(temp);
                 delete p;
                 size--;
             }
         } else {        // cases 1 and 2: item has no child or 1 child
-            TreeNode *child;
+            TreeNode<TypeName> *child;
             if (current->GetLChild() != 0) {
                 child = current->GetLChild();
             } else {
@@ -181,12 +193,14 @@ void BST::Delete(KeyType key) {
 }
 
 /* Traverse the tree in key order */
-void BST::InOrderTraversal() {
+template <typename TypeName>
+void BST<TypeName>::InOrderTraversal() {
     InOrderTraversal(tree);
 }
 
 /* Recursively traverse the tree in key order */
-void BST::InOrderTraversal(TreeNode *tree) {
+template <typename TypeName>
+void BST<TypeName>::InOrderTraversal(TreeNode<TypeName> *tree) {
     if (tree != NULL) {
         InOrderTraversal(tree->GetLChild());
         cout << tree->GetKey() << " " << setw(3) << tree->GetValue() << endl;
@@ -194,11 +208,13 @@ void BST::InOrderTraversal(TreeNode *tree) {
     }
 }
 
-void BST::PostOrderTraversal() {
+template <typename TypeName>
+void BST<TypeName>::PostOrderTraversal() {
     PostOrderTraversal(tree);
 }
 
-void BST::PostOrderTraversal(TreeNode *tree) {
+template <typename TypeName>
+void BST<TypeName>::PostOrderTraversal(TreeNode<TypeName> *tree) {
     if (tree != NULL) {
         PostOrderTraversal(tree->GetLChild());
         PostOrderTraversal(tree->GetRChild());
@@ -206,11 +222,13 @@ void BST::PostOrderTraversal(TreeNode *tree) {
     }
 }
 
-void BST::PreOrderTraversal() {
+template <typename TypeName>
+void BST<TypeName>::PreOrderTraversal() {
     PreOrderTraversal(tree);
 }
 
-void BST::PreOrderTraversal(TreeNode *tree) {
+template <typename TypeName>
+void BST<TypeName>::PreOrderTraversal(TreeNode<TypeName> *tree) {
     if (tree != NULL) {
         cout << tree->GetKey() << " ";
         PreOrderTraversal(tree->GetLChild());
@@ -218,7 +236,8 @@ void BST::PreOrderTraversal(TreeNode *tree) {
     }
 }
 
-void BST::Update(TreeNode *tree, KeyType key, ValueType val) {
+template <typename TypeName>
+void BST<TypeName>::Update(TreeNode<TypeName> *tree, TypeName key, ValueType val) {
 
     if (tree != NULL) {
         if (key == tree->GetKey()) {
@@ -233,7 +252,8 @@ void BST::Update(TreeNode *tree, KeyType key, ValueType val) {
     }
 }
 
-void BST::Update(KeyType key, ValueType val) {
+template <typename TypeName>
+void BST<TypeName>::Update(TypeName key, ValueType val) {
     Update(tree, key, val);
 }
 

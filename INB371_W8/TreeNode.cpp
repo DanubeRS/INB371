@@ -11,50 +11,60 @@ using namespace std;
 
 /* Constructor initialises an object of type TreeNode with key and sets left and
    right child pointers to NULL. */
-TreeNode::TreeNode(KeyType key, ValueType val) {
+template <typename ElemType>
+TreeNode<ElemType>::TreeNode(ElemType key, ValueType val) {
     this->key = key;
     this->lChild = NULL;
     this->rChild = NULL;
 }
 
 /* Destructor */
-TreeNode::~TreeNode() {
+template <typename ElemType>
+TreeNode<ElemType>::~TreeNode() {
     // no dynamic objects to delete
 }
-
+template <typename ElemType>
 /* Accessors to private TreeNode fields */
-KeyType TreeNode::GetKey() {
+ElemType TreeNode<ElemType>::GetKey() {
     return key;
 }
-
-TreeNode *TreeNode::GetLChild() {
+template <typename ElemType>
+TreeNode<ElemType> *TreeNode<ElemType>::GetLChild() {
     return lChild;
 }
 
-TreeNode *TreeNode::GetRChild() {
+template <typename ElemType>
+TreeNode<ElemType> *TreeNode<ElemType>::GetRChild() {
     return rChild;
 }
 
 /* Mutators for attaching new child nodes to an existing node */
-void TreeNode::SetLChild(TreeNode *child) {
+//Sets the child of the left node. Inputs pointer to the child in question
+template <typename ElemType>
+void TreeNode<ElemType>::SetLChild(TreeNode *child) {
     lChild = child;
 }
 
-void TreeNode::SetRChild(TreeNode *child) {
+//Sets the child of the right node. Inputs pointer to the child in question
+template <typename ElemType>
+void TreeNode<ElemType>::SetRChild(TreeNode *child) {
     rChild = child;
 }
 
 /* Mutator for key - only used in delete */
-void TreeNode::SetKey(KeyType key) {
+template <typename ElemType>
+void TreeNode<ElemType>::SetKey(ElemType key) {
     this->key = key;
 }
 
-void TreeNode::SetValue(ValueType val) {
+template <typename ElemType>
+void TreeNode<ElemType>::SetValue(ValueType val) {
 
     this->value =  val;
 
 }
-ValueType TreeNode::GetValue() {
+template <typename ElemType>
+ValueType TreeNode<ElemType>::GetValue() {
 
     return this->value;
 

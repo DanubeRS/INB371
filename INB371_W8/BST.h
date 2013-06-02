@@ -8,6 +8,7 @@
 
 #include "TreeNode.h"
 
+template <typename TypeName>
 class BST {
 
 public:
@@ -22,47 +23,47 @@ public:
     int Size();
 
     /* Insert key in tree if it does not exist */
-    void Insert(KeyType key, ValueType val);
+    void Insert(TypeName key, ValueType val);
 
     /* Delete key in tree if it exists */
-    void Delete(KeyType key);
+    void Delete(TypeName key);
 
     /* Search for a key in the tree.  Return true if it exists otherwise return false */
-    bool Search(KeyType key);
+    bool Search(TypeName key);
 
     /* Clear the contents of the BST */
     void Clear();
 
     //Update the contents of a treenode
-    void Update(KeyType key, ValueType val);
+    void Update(TypeName key, ValueType val);
 
     // traversals
     void PreOrderTraversal();
     void InOrderTraversal();
     void PostOrderTraversal();
 
-    ValueType GetValue(KeyType key);
+    ValueType GetValue(TypeName key);
 
 private:
-    TreeNode *tree;
+    TreeNode<TypeName> *tree;
     int size;
-    void Clear(TreeNode *tree);
+    void Clear(TreeNode<TypeName> *tree);
 
     /* Inserts the specified key at the appropriate location in the BST rooted at tree. */
-    void Insert(TreeNode *tree, KeyType key, ValueType val);
+    void Insert(TreeNode<TypeName> *tree, TypeName key, ValueType val);
 
 
     /* Recursive traversal prototypes */
-    void InOrderTraversal(TreeNode *tree);
-    void PreOrderTraversal(TreeNode *tree);
-    void PostOrderTraversal(TreeNode *tree);
+    void InOrderTraversal(TreeNode<TypeName> *tree);
+    void PreOrderTraversal(TreeNode<TypeName> *tree);
+    void PostOrderTraversal(TreeNode<TypeName> *tree);
 
     /* Recursive implementation of search function */
-    bool Search(TreeNode *tree, KeyType key);
+    bool Search(TreeNode<TypeName> *tree, TypeName key);
 
-    void Update(TreeNode *tree, KeyType key, ValueType val);
+    void Update(TreeNode<TypeName> *tree, TypeName key, ValueType val);
 
-    ValueType GetValue(TreeNode *tree, KeyType key);
+    ValueType GetValue(TreeNode<TypeName> *tree, TypeName key);
 };
 
-#endif // _bst_h
+#endif //_bst_h

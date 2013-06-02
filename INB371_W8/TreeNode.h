@@ -8,14 +8,14 @@
 
 #include <string>
 
-typedef std::string KeyType;
 typedef int ValueType;
 
+template<typename ElemType>
 class TreeNode {
 private:
 
     // data
-    KeyType key;
+    ElemType key;
 
     // pointers to child nodes
     TreeNode *lChild;
@@ -25,13 +25,13 @@ private:
 public:
     /*Constructor initialises an object oif type TreeNode with key and sets left and
       right child pointers to NULL. */
-    TreeNode(KeyType key, ValueType val);
+    TreeNode(ElemType key, ValueType val);
 
     /* Destructor */
     ~TreeNode();
 
     /* Accessors to private TreeNode fields */
-    KeyType GetKey();
+    ElemType GetKey();
     TreeNode *GetLChild();
     TreeNode *GetRChild();
 
@@ -40,7 +40,7 @@ public:
     void SetRChild(TreeNode *child);
 
     /* Mutator for key - only used in delete */
-    void SetKey(KeyType key);
+    void SetKey(ElemType key);
 
     //Value accessors
     void SetValue(ValueType val);
