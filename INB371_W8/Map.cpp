@@ -2,44 +2,51 @@
     Implementation file for the Map ADT. This particular ADT uses the BST implementation as an underlying data structure.
  */
 
-#include <cstdio>
-#include "BST.h"
+#include <iostream>
+#include <string>
 #include "Map.h"
 
-using namespace std;
 
 
 //Constructor
 Map::Map() {
-    mapStructure = new BST();   //Define a new mapping structure (BST)
+    mapStructure = BST();   //Define a new mapping structure (BST)
 }
 
 Map::~Map() {
-    delete mapStructure;
+    //No destructor needed as object variables are stacked
 }
 
 bool Map::isEmpty() {
-    return mapStructure->IsEmpty();
+    return mapStructure.IsEmpty();
 }
 
 int Map::Size() {
-    return mapStructure->Size();
+    return mapStructure.Size();
 }
 
 bool Map::ContainsKey(KeyType key) {
-    return mapStructure->Search(key);
+    return mapStructure.Search(key);
 }
 
 void Map::Put(KeyType key, ValueType val) {
 
     //Check to sey if key exists;
-    if (ContainsKey(key)) {
-        mapStructure->Update(key, val);
+    if (mapStructure.Search(key)) {
+        mapStructure.Update(key, val);
     } else {
-        mapStructure->Insert(key, val);
+        mapStructure.Insert(key, val);
     }
 }
 
-ValueType Map::Get(KeyType key){
-	return mapStructure->Search(KeyType key)
+ValueType Map::Get(KeyType key) {
+    return mapStructure.GetValue(key);
+}
+
+void Map::Traverse() {
+    mapStructure.InOrderTraversal();
+}
+
+void Map::Remove(KeyType key){
+    mapStructure.Delete(key);
 }

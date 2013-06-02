@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <iomanip>
 #include <iostream>
 #include "BST.h"
 
@@ -188,7 +189,7 @@ void BST::InOrderTraversal() {
 void BST::InOrderTraversal(TreeNode *tree) {
     if (tree != NULL) {
         InOrderTraversal(tree->GetLChild());
-        cout << tree->GetKey() << " ";
+        cout << tree->GetKey() << " " << setw(3) << tree->GetValue() << endl;
         InOrderTraversal(tree->GetRChild());
     }
 }
