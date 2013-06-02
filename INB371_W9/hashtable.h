@@ -14,6 +14,11 @@ public:
     DataType *Find(KeyType key);
     void Delete(DataType *pos);
 
+    //Exercise implemented functionality
+    int CountRecords();
+    int CountCollisions();
+    int LargestBucket();
+
 private:
     vector< vector<DataType> > table;
 };
