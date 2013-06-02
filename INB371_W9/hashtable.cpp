@@ -1,5 +1,4 @@
 #include <cstddef>
-#include "hashtable.h"
 #include "record.h"
 
 #ifdef _hashtable_h_
@@ -55,7 +54,7 @@ int HashTable<KeyType, DataType>::CountRecords() {
     //Create an iterable loop using the iterability of the C++STL vector<T> class
     for (typename vector<vector <DataType> >::iterator iter_t = table.begin(); iter_t != table.end(); iter_t++) {
 
-        numberOfRecords += iter_t.size();
+        numberOfRecords += iter_t->size();
     }
 
     return numberOfRecords;
