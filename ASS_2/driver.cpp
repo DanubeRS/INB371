@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 
 //User Defined libraries
 #include "random.h"
@@ -16,7 +17,7 @@
 
 //Program Wide Constants
 const unsigned int MAX_POINT_RANGE  = 100;
-const unsigned int NUMBER_OF_POINTS = 20;
+const unsigned int NUMBER_OF_POINTS = 10;
 
 //Debug Info flags
 const bool TIMER_TEST               =   true;
@@ -26,16 +27,22 @@ const bool TEST_EUCLIDEAN_DISTANCE  =   false;
 const bool LIST_EDGES               =   false;
 const bool EDGE_TEST                =   false;
 
+std::ostringstream debugSS; //Debug SS for passing to InformationMessage()
+
+void InformationMessage(string msg);
+
 //Core datatypes
-vector<Point *> randomPoints;   //Collection of Randomly generated points
-Graph *connectedPoints;          //Graph of connected points as per randompoints
+vector<Point *> randomPoints;       //Collection of Randomly generated points
+Graph *connectedPoints;             //Graph of connected points as per randompoints
+Timer *timer;                       //Timer for measuring performance
 
 //Program-based Prototypes
 vector<Point *> RandomPoints(unsigned int n);
-void InformationMessage(string msg);
-Timer* timer;
 
-//Program Entry Point
+
+
+//Program Entry Point//
+//===================//
 int main(int argc, char const *argv[]) {
 
 
@@ -49,8 +56,12 @@ int main(int argc, char const *argv[]) {
     //Create a timer for timing applications
     timer = new Timer();
 
-    InformationMessage("Randomising Points");
+    //Create random points
+    InformationMessage("Randomising Points...");
     randomPoints = RandomPoints(NUMBER_OF_POINTS);
+    
+    debugSS << NUMBER_OF_POINTS << " created";
+    InformationMessage(debugSS.str());
 
     //Test distance computation between to points
     if (TEST_EUCLIDEAN_DISTANCE) {
@@ -163,6 +174,10 @@ void InformationMessage(string msg) {
     }
 }
 
-/*
-    Method which takes a vector of Point references, and completes and adjacency
- */
+// /*
+//     Special case of information message, whereby a stringstream is passed
+//  */
+// void InformationMessage(std::ostringstream ss){
+//     InformationMessage(ss.str());
+//     ss.clear();
+// }

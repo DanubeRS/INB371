@@ -25,7 +25,7 @@ public:
     /*
         Adds an edge to the graph by assigning true to the adjacency matrix. Note that src and dst must be within the dimensions of the allowable graph space
      */
-    void AddEdge(Edge* e);
+    void AddEdge(Edge *e);
 
     /*
         Adds a vertex to the scope of the graph. Returns the index for usage if required
@@ -99,7 +99,7 @@ private:
     double TSPDP(int current, int bitmask);
 
     //Memo table for use in TSPDP
-            int **memo;
+    int **memo;
 };
 
 #endif
