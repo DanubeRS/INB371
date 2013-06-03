@@ -2,18 +2,21 @@
 #include "priorityqueue.h"
 
 const int UNUSED = -999;
-const int ROOT = 1;
+const int ROOT = 0;
 
-PriorityQueue::PriorityQueue() {
+template <typename ElemType>
+PriorityQueue<ElemType>::PriorityQueue() {
     heap.resize(1);
     heap[0] = UNUSED;
 }
 
-PriorityQueue::~PriorityQueue() {
+template <typename ElemType>
+PriorityQueue<ElemType>::~PriorityQueue() {
     heap.clear();
 }
 
-void PriorityQueue::SiftUp() {
+template <typename ElemType>
+void PriorityQueue<ElemType>::SiftUp() {
     int pos = heap.size() - 1;
     int parent = pos / 2;
     while (parent >= ROOT && heap[pos] < heap[parent]) {
@@ -23,12 +26,14 @@ void PriorityQueue::SiftUp() {
     }
 }
 
-void PriorityQueue::Add(ElemType elem) {
+template <typename ElemType>
+void PriorityQueue<ElemType>::Add(ElemType elem) {
     heap.push_back(elem);
     SiftUp();
 }
 
-void PriorityQueue::SiftDown(int pos) {
+template <typename ElemType>
+void PriorityQueue<ElemType>::SiftDown(int pos) {
 
     // start to sift down
     bool siftDown = 2 * pos < heap.size();
@@ -68,7 +73,8 @@ void PriorityQueue::SiftDown(int pos) {
     }
 }
 
-ElemType PriorityQueue::Poll() {
+template <typename ElemType>
+ElemType PriorityQueue<ElemType>::Poll() {
     if (!IsEmpty()) {
 
         // store the root value
@@ -83,24 +89,27 @@ ElemType PriorityQueue::Poll() {
     return NULL;
 }
 
-ElemType PriorityQueue::Peek() {
+template <typename ElemType>
+ElemType PriorityQueue<ElemType>::Peek() {
     if (!IsEmpty()) {
         return heap[ROOT];
     }
     return NULL;
 }
 
-bool PriorityQueue::IsEmpty() {
+template <typename ElemType>
+bool PriorityQueue<ElemType>::IsEmpty() {
     return heap.size() == 1;
 }
 
-void PriorityQueue::Swap(int i, int j) {
+template <typename ElemType>
+void PriorityQueue<ElemType>::Swap(int i, int j) {
     ElemType temp = heap[j];
     heap[j] = heap[i];
     heap[i] = temp;
 }
 
-//void PriorityQueue::Display() {
+//void PriorityQueue<ElemType>::Display() {
 //    for (int i = 1; i < heap.size(); i++) {
 //        cout << heap[i] << " ";
 //    }

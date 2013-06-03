@@ -6,8 +6,7 @@
 
 using namespace std;
 
-typedef string ElemType;
-
+template <typename ElemType>
 class PriorityQueue {
 public:
 

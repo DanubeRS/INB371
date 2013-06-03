@@ -1,12 +1,13 @@
 #include <iostream>
-#include "priorityqueue.h"
+#include <string>
+#include "GenericPriorityQueue.h"
 #include "random.h"
 
 using namespace std;
 
 int main() {
 
-    PriorityQueue pq;
+    GenericPriorityQueue<string> pq;
     vector<string> words;
 
     /* Create some random four letter words and add to priority queue */
