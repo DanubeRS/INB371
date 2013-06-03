@@ -57,7 +57,7 @@ float Point::DistanceTo(Point *dst) {
     //Calc Eucledian distance bewteen two points
     return sqrt(
                pow(abs(this->getX() - dst->getX()), 2) +
-               pow(abs(this->getY() - dst->getX()), 2));
+               pow(abs(this->getY() - dst->getY()), 2));
 
 
 }

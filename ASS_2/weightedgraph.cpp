@@ -9,13 +9,15 @@
 #include <limits>
 #include <stack>
 #include <queue>
+#include <cstring>
 
 //Header
 #include "weightedgraph.h"
+//#include "edgecomparer.h"
 
 using namespace std;
 
-const int INF = numeric_limits<int>::max();     //Maximum int range
+const int INF = 9999;     //Maximum int range
 const int LOOPBACK = 0;                         //Cost of linking a node to itself
 
 
@@ -33,6 +35,9 @@ Graph::Graph(unsigned int nodes) {
     for (int i = 0; i < dimension; i++) {
         links[i] = new double[dimension];
     }
+
+    //Populate the adjacency list with empty vectors
+    adjacencyList.resize(dimension);
 
     //Default all nodes as unlinked
     for (int i = 0; i < dimension; i++) {
@@ -66,12 +71,13 @@ Graph::~Graph() {
 /*
     Adds an edge to the graph
  */
-void Graph::AddEdge(unsigned int src, unsigned int dst, int weight) {
+void Graph::AddEdge(Edge *e) {
 
 
     //Fill in adjacency table
-    links[src][dst] = weight;
-    links[dst][src] = weight;
+
+    links[e->getSource()->getID()][e->getDestination()->getID()] = e->getWeight();
+    links[e->getDestination()->getID()][e->getSource()->getID()] = e->getWeight();
 
 }
 
@@ -83,9 +89,9 @@ void Graph::Display() {
     for (int i = 0; i < dimension; i++) {
         for (int j = 0; j < dimension; ++j) {
             if (links[i][j] == INF) {
-                cout << setw(3) << "-";
+                cout << setw(10) << "-";
             } else {
-                cout << setw(3) << links[i][j];
+                cout << setw(10) << links[i][j];
             }
         }
 
@@ -180,6 +186,118 @@ void Graph::BFS(unsigned int start) {
 
     cout << endl;
 
-
 }
 
+/*
+    A method which attempts to choose which TSP method would be best suited to the size of the problem.
+ */
+double Graph::OptimalTSP() {
+
+    //If Brute-force method is possible
+    if (false) {
+
+        //Declare the visited array
+        bool *visited = new bool[dimension];
+
+        //reset the visited array
+        for (int i = 0; i < dimension; i++) {
+            visited[i] = false;
+        }
+
+        //Count first element as visited
+        visited[0] = true;
+
+        //Temporarily allocate so we can perform mem mgmt
+        bool result = TSPBruteForce(0, visited);
+        delete[] visited;   //Clean up some space
+
+        return result;
+
+    } else if (true) {
+        //Create the memoisation table
+        memo = new int*[dimension];
+        for (int i = 0; i < dimension; i++) {
+            memo[i] = new int[(1 << dimension)];
+        }
+
+        float result = TSPDP(0, 1);
+
+        return result;
+    } else {
+        return ApproximateTSP();
+    }
+}
+
+/*
+    Adds a vertex to the scope of the graph. Returns the index for usage if required. Note that edge lengths should be recalculated once the immediate set of vertices have been added
+
+ */
+int Graph::AddVertex(Vertex *v) {
+    verticesInGraph.push_back(v);
+    return verticesInGraph.size() - 1;
+}
+
+/*
+    TBI
+ */
+double Graph::ApproximateTSP() {
+    return 0;
+}
+
+/*
+    Brute force calculation of the optimal route.
+    Guarantees a result that is potimal, but is highly ineficient - log(N!)
+ */
+double Graph::TSPBruteForce(int current, bool *visited) {
+    bool allVisited = true;
+
+    //Check if all stations visited
+    for (int i = 0; i < dimension; i++) {
+        allVisited = (allVisited && visited[i]);
+    }
+
+    if (allVisited) {
+        return verticesInGraph[current]->getValue()->DistanceTo(verticesInGraph[0]->getValue());
+    }
+
+    //Copy array
+    bool visitedCopy[dimension];
+    std::copy(&visited[0], &visited[dimension - 1], visitedCopy);
+
+    //Set minimum distance to infinity
+    float minDistance = (float)INF;
+
+    //For adjacent vertices across the graph
+    for (int adj = 0; adj < dimension; adj++) {
+
+        if (current != adj && !visited[adj]) {
+            visitedCopy[adj] = true;
+            float dist = verticesInGraph[current]->getValue()->DistanceTo(verticesInGraph[adj]->getValue()) +
+                         TSPBruteForce(adj, visitedCopy);
+            float minDistance = min(minDistance, dist);
+            visitedCopy[adj] = false;
+        }
+    }
+    return minDistance;
+}
+
+double Graph::TSPDP(int current, int bitmask) {
+    if (memo[current][bitmask] != 0) {
+        return memo[current][bitmask];
+    }
+    if (bitmask == ((1 << dimension) - 1)) {
+        return verticesInGraph[current]->getValue()->DistanceTo(verticesInGraph[0]->getValue());
+    }
+
+    float minDistance = (float)INF;
+    for (int adj = 0; adj < dimension; adj++) {
+        if (current != adj && ((bitmask & (1 << adj)) == 0)) {
+            float dist = verticesInGraph[current]->getValue()->DistanceTo(verticesInGraph[adj]->getValue()) +
+                         TSPDP(adj, (bitmask | (1 << adj)));
+            minDistance = min(minDistance, dist);
+        }
+    }
+
+    memo[current][bitmask] = minDistance;
+    return minDistance;
+}

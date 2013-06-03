@@ -11,23 +11,29 @@
 //User Defined libraries
 #include "random.h"
 #include "point.h"
+#include "weightedgraph.h"
+#include "timer.cpp"
 
 //Program Wide Constants
-const unsigned int MAX_POINT_RANGE 	= 100;
-const unsigned int NUMBER_OF_POINTS	= 50;
+const unsigned int MAX_POINT_RANGE  = 100;
+const unsigned int NUMBER_OF_POINTS = 20;
 
 //Debug Info flags
-const bool DEBUG_MESSAGES       	=   true;
-const bool LIST_RANDOM_POINTS   	=   false;
-const bool TEST_EUCLIDEAN_DISTANCE	= 	true;
+const bool TIMER_TEST               =   true;
+const bool DEBUG_MESSAGES           =   true;
+const bool LIST_RANDOM_POINTS       =   false;
+const bool TEST_EUCLIDEAN_DISTANCE  =   false;
+const bool LIST_EDGES               =   false;
+const bool EDGE_TEST                =   false;
 
 //Core datatypes
-vector<Point *> randomPoints;	//Collection of Randomly generated points
-Graph connectedPoints;			//Graph of connected points as per randompoints
+vector<Point *> randomPoints;   //Collection of Randomly generated points
+Graph *connectedPoints;          //Graph of connected points as per randompoints
 
 //Program-based Prototypes
 vector<Point *> RandomPoints(unsigned int n);
 void InformationMessage(string msg);
+Timer* timer;
 
 //Program Entry Point
 int main(int argc, char const *argv[]) {
@@ -40,21 +46,81 @@ int main(int argc, char const *argv[]) {
     cout << "|  ***INB371_S1_2013_ASS2***   |" << endl;
     cout << "================================" << endl << endl;
 
+    //Create a timer for timing applications
+    timer = new Timer();
+
     InformationMessage("Randomising Points");
     randomPoints = RandomPoints(NUMBER_OF_POINTS);
 
     //Test distance computation between to points
-    if (TEST_EUCLIDEAN_DISTANCE){
+    if (TEST_EUCLIDEAN_DISTANCE) {
 
-    	//Randomise two points
-    	Point* pointA = randomPoints[RandomInteger(0, NUMBER_OF_POINTS - 1)];
-    	Point* pointB = randomPoints[RandomInteger(0, NUMBER_OF_POINTS - 1)];
+        //Randomise two points
+        Point *pointA = randomPoints[RandomInteger(0, NUMBER_OF_POINTS - 1)];
+        Point *pointB = randomPoints[RandomInteger(0, NUMBER_OF_POINTS - 1)];
 
-    	//Print results of calculation
-	    	cout << "Distance between " << pointA->Display() << " and " << pointB->Display() << " is " << pointA->DistanceTo(pointB) << endl;
+        //Print results of calculation
+        cout << "Distance between " << pointA->Display() << " and " << pointB->Display() << " is " << pointA->DistanceTo(pointB) << endl;
     }
 
     //Construct a fully connected tree of all nodes.
+    connectedPoints = new Graph(NUMBER_OF_POINTS);
+
+    vector<Vertex * >pointsAsVert;
+    InformationMessage("Creating vertices from randomised points");
+    //Create our vertices, of which we can pass-by-reference to the graph
+    for (int i = 0; i < NUMBER_OF_POINTS; i++) {
+        pointsAsVert.push_back(new Vertex(i, randomPoints[i]));
+    }
+
+    InformationMessage("Adding vertices to the graph.");
+    timer->Start();
+    //Create a new vertex for all of the random points.
+    for (std::vector<Vertex *>::iterator it = pointsAsVert.begin(); it != pointsAsVert.end(); it++) {
+        connectedPoints->AddVertex(*it);
+    }
+    timer->Stop();
+
+    //As all of our points have been added, we can go ahead and re-calculate our edges.
+    for (int i = 0; i < pointsAsVert.size(); i++) {
+        for (int j = 0; j < pointsAsVert.size(); j++) {
+            connectedPoints->AddEdge(new
+                                     Edge(pointsAsVert[i],
+                                          pointsAsVert[j],
+                                          pointsAsVert[i]->getValue()->DistanceTo(
+                                              pointsAsVert[j]->getValue()
+                                          )));
+        }
+
+    }
+
+    //list first vertex, and its distance to a random point, and itself
+    if (EDGE_TEST) {
+        Vertex *randomVert = pointsAsVert[RandomInteger(0, NUMBER_OF_POINTS - 1)];
+        cout << pointsAsVert[0]->getValue()->Display() << endl;
+        cout << pointsAsVert[0]->getValue()->DistanceTo(randomVert->getValue()) << endl;
+        cout << pointsAsVert[0]->getValue()->DistanceTo(pointsAsVert[0]->getValue()) << endl;
+    }
+
+    //List edge calculations
+    if (LIST_EDGES) {
+        for (int i = 0; i < pointsAsVert.size(); i++) {
+            for (int j = 0; j < pointsAsVert.size(); j++) {
+                cout << (Edge(pointsAsVert[i],
+                              pointsAsVert[j],
+                              pointsAsVert[i]->getValue()->DistanceTo(
+                                  pointsAsVert[j]->getValue()
+                              ))).toString() << endl;
+            }
+
+        }
+
+    }
+
+    connectedPoints->Display();
+    InformationMessage("Performing TSP analysis");
+    cout << connectedPoints->OptimalTSP() << endl;;
+
 
 
 
@@ -62,7 +128,7 @@ int main(int argc, char const *argv[]) {
 }
 
 /*
-	Method which returns a vector of pointers to heap-stored Point objects. 
+    Method which returns a vector of pointers to heap-stored Point objects.
  */
 vector<Point *> RandomPoints(unsigned int n) {
 
@@ -89,7 +155,7 @@ vector<Point *> RandomPoints(unsigned int n) {
 }
 
 /*
-	Method which prints messages if the message pringting flag is set to true.
+    Method which prints messages if the message pringting flag is set to true.
  */
 void InformationMessage(string msg) {
     if (DEBUG_MESSAGES) {
@@ -98,5 +164,5 @@ void InformationMessage(string msg) {
 }
 
 /*
-	Method which takes a vector of Point references, and completes and adjacency 
+    Method which takes a vector of Point references, and completes and adjacency
  */

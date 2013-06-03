@@ -44,7 +44,8 @@ std::string Edge::toString() {
     std::stringstream buffer;
 
     //Provide connection details
-    buffer << "This edge connects the vertices " << this->src->getID() << " to " << this->dst->getID();
+    buffer << "This edge connects the vertices " << this->src->getID() << " to " << this->dst->getID()
+           << " with distance " << this->weight;;
 
     return buffer.str();
 }
