@@ -10,6 +10,8 @@
 //Header
 #include "graph.h"
 
+    using namespace std;
+
 
 /*
 constructor for a graph object. Accepts unsigned int "nodes" as the preconfigured number of nodes

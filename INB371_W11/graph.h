@@ -13,7 +13,7 @@ using namespace std;
 class Graph {
 public:
     //Constructor
-    Graph(unsigned int size);
+    Graph(unsigned int nodes);
 
     //Destructor
     ~Graph();
@@ -24,7 +24,7 @@ public:
     void AddEdge(unsigned int src, unsigned int dst);
 
     /*
-        Displays the adjacency matrix via std::cout
+        Displays the adjacency matrix via std::void
      */
     void Display();
 
@@ -33,8 +33,5 @@ private:
 	bool** links;
 	int  dimension;
 };
-
-//Link to implementation file
-#include "graph.cpp"
 
 #endif
