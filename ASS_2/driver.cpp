@@ -17,7 +17,7 @@
 
 //Program Wide Constants
 const unsigned int MAX_POINT_RANGE  = 100;
-const unsigned int NUMBER_OF_POINTS = 10;
+const unsigned int NUMBER_OF_POINTS = 5;
 
 //Debug Info flags
 const bool TIMER_TEST               =   true;
@@ -130,10 +130,7 @@ int main(int argc, char const *argv[]) {
 
     connectedPoints->Display();
     InformationMessage("Performing TSP analysis");
-    cout << connectedPoints->OptimalTSP() << endl;;
-
-
-
+    cout << "TSP Length is " << connectedPoints->OptimalTSP() << endl;
 
     return 0;
 }

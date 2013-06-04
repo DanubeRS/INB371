@@ -10,10 +10,11 @@
 #include <stack>
 #include <queue>
 #include <cstring>
+#include <algorithm>
 
 //Header
 #include "weightedgraph.h"
-//#include "edgecomparer.h"
+#include "disjointset.h"
 
 using namespace std;
 
@@ -79,6 +80,8 @@ void Graph::AddEdge(Edge *e) {
     links[e->getSource()->getID()][e->getDestination()->getID()] = e->getWeight();
     links[e->getDestination()->getID()][e->getSource()->getID()] = e->getWeight();
 
+    edgeList.push(e);
+
 }
 
 /*
@@ -97,95 +100,59 @@ void Graph::Display() {
 
         cout << endl;
     }
+
+}
+
+void Graph::DisplayLinks() {
+    for (std::vector<Vertex *>::iterator it = verticesInGraph.begin(); it != verticesInGraph.end(); it++) {
+        cout << (*it)->toString() << endl;
+    }
 }
 
 /*
-    Sets up the Depth-First searching process for traversing a graph
+    depth-First search of the disjoint set.
  */
-void Graph::DFSRecursive(unsigned int start) {
-    cout << "Performing Depth-First search..." << endl;
-    //Reset the visited tracking array.
+double Graph::DFS(unsigned int start) {
+    double distance = 0;
+
+    //reset the visited array
     for (int i = 0; i < dimension; i++) {
         visited[i] = false;
     }
 
-    //Call the private function to perform the recursive search
-    PrivDFSRecursive(start);
-}
+    stack<Vertex *> vertexStack;
 
-void Graph::PrivDFSRecursive(int current) {
-    cout << "Visited " << current << endl;
-    visited[current] = true;
-    for (int i = 0; i < dimension; i++) {
-        if ( !(links[current][i] == INF || visited[i]) ) {
-            PrivDFSRecursive(i);
+    vertexStack.push(verticesInGraph[0]);
+    visited[0] = true;
+
+    Vertex *currentVertex = NULL;
+    Vertex *previousVertex = NULL;
+
+    while (!vertexStack.empty()) {
+        currentVertex = vertexStack.top();
+        vertexStack.pop();
+
+        if (previousVertex != NULL) {
+            distance += previousVertex->getValue()->DistanceTo(previousVertex->getValue());
         }
-    }
-}
+        cout << "vertex " << currentVertex->getID() << " contians links to: " << endl;
+        for (std::vector<Vertex *>::iterator it = currentVertex->getAdjacencies().begin(); it != currentVertex->getAdjacencies().end(); it++) {
+            if (!visited[(*it)->getID()]) {
+                vertexStack.push((*it));
+                visited[(*it)->getID()] = true;
 
-void Graph::DFS(unsigned int start) {
-
-    //Declare the stack in which the visited stations are recorded
-    stack<int> visitOrder;
-    int current;
-
-    cout << endl << "Visit Order: " << endl;
-
-    //Zero the visited array
-    for (int i = 0; i < dimension; i++) {
-        visited[i] = false;
-    }
-    visitOrder.push(start);
-    visited[start] = true;
-
-    while (!visitOrder.empty()) {
-        current = visitOrder.top();
-        visitOrder.pop();
-
-        cout << setw(3) << current;
-
-        for (int i = 0; i < dimension; i++)
-            if ( !(links[current][i] == INF || visited[i])) {
-                visitOrder.push(i);
-                visited[i] = true;
-            }
-    }
-
-    cout << endl;
-}
-
-void Graph::BFS(unsigned int start) {
-    queue<int> breadthQueue;
-    int current;
-
-    cout << endl << "Visit Order: " << endl;
-
-    //Zero the visited array
-    for (int i = 0; i < dimension; i++) {
-        visited[i] = false;
-    }
-
-    //Place start on the queue
-    breadthQueue.push(start);
-
-    visited[start] = true;
-
-    while (!breadthQueue.empty()) {
-        current = breadthQueue.front();
-        breadthQueue.pop();
-
-        cout << setw(3) << current;
-
-        for (int i = 0; i < dimension; i++) {
-            if ( !(links[current][i] == INF || visited[i])) {
-                breadthQueue.push(i);
-                visited[i] = true;
+                cout << "\t\t vertex " << (*it)->getID() << endl;
             }
         }
+
+        cout << "Vertex " << currentVertex->getID() << endl;
+
+        previousVertex = currentVertex;
     }
 
-    cout << endl;
+    distance += currentVertex->getValue()->DistanceTo(verticesInGraph[start]->getValue());
 
+    return distance;
 }
 
 /*
@@ -213,7 +180,7 @@ double Graph::OptimalTSP() {
 
         return result;
 
-    } else if (true) {
+    } else if (false) {
         //Create the memoisation table
         memo = new int*[dimension];
         for (int i = 0; i < dimension; i++) {
@@ -225,6 +192,7 @@ double Graph::OptimalTSP() {
         return result;
     } else {
         return ApproximateTSP();
+
     }
 }
 
@@ -241,7 +209,41 @@ int Graph::AddVertex(Vertex *v) {
     TBI
  */
 double Graph::ApproximateTSP() {
-    return 0;
+
+    //Constant for DFS starting point
+    const unsigned int START = 0;
+
+    //Create the set we will be working with
+    DisjointSet mst = DisjointSet(dimension);
+
+    //Initialise MST tracking variables
+    int edgeCount = 0;
+
+    //Add all our edges to the list
+
+    while (!edgeList.empty() && edgeCount < (dimension - 1)) {
+        Edge *edge = edgeList.top();
+        edgeList.pop();
+
+        if (!mst.SameComponent(edge->getSource()->getID(), edge->getDestination()->getID())) {
+            edgeCount++;
+            mst.Union(edge->getSource()->getID(), edge->getDestination()->getID());
+
+            //Describe new linkages
+            cout << "New linkages" << endl;
+            for (int i = 0; i < dimension; i++){
+                cout << "\t" << i <<  " - " << mst.Find(i) << endl;
+            }
+                edge->getDestination()->addAdjacency(edge->getSource());
+            edge->getSource()->addAdjacency(edge->getDestination());
+            cout << "Added link from " << edge->getSource()->getID() << " to " << edge->getDestination()->getID() << endl;
+        }
+    }
+    this->DisplayLinks();
+
+    return this->DFS(START);
+
+
 }
 
 /*

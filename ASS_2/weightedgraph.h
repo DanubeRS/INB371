@@ -10,6 +10,8 @@
 #include <queue>
 
 #include "edge.h"
+#include "edgecomparer.cpp"
+#include "disjointset.h"
 
 using namespace std;
 
@@ -38,21 +40,6 @@ public:
     void Display();
 
     /*
-        Method which sets up the process of Depth-First Searching, and calls the private mehtod which completes the searchning
-     */
-    void DFSRecursive(unsigned int start);
-
-    /*
-        Method which iteratively performs a Depth-first search
-     */
-    void DFS(unsigned int start);
-
-    /*
-        Method which performs a Breadth-first search across the graph
-     */
-    void BFS(unsigned int start);
-
-    /*
         Internally chooses which shortest path approximation to use.
      */
     double OptimalTSP();
@@ -61,12 +48,17 @@ public:
         Recalculates all the edge lengths. Assumes fully connected. Ignores if previously calculated.
         TODO: Check if exists, even if only via a linear probe search
      */
+    
+    void DisplayLinks();
 
 
 
 private:
 
-    void PrivDFSRecursive(int current);
+    /*
+    Method which iteratively performs a Depth-first search
+    */
+    double DFS(unsigned int start);
 
     double **links;    //Adjacency matrix
     int  dimension;    //Number of Vertices in the graph
@@ -77,7 +69,7 @@ private:
     bool *visited;
 
     //An Edge List
-    //std::priority_queue<Edge *, vector<Edge *>, EdgeComparer> edgeList;
+    std::priority_queue<Edge *, vector<Edge *>, EdgeComparer> edgeList;
 
     //===========================//
     // TSP shortest-path solvers //
